@@ -207,3 +207,4 @@ function cancelSupport() {
     document.getElementById('side-menu-content').innerHTML = sideMenuContent;
     resetToHome();
 }
+    
