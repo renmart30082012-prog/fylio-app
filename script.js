@@ -28,7 +28,7 @@ const APPS_DATA = [
         bannerText: 'Xuper tv'
     }
         {
-        id: 'whatsapp',
+        id: 'tiktok mod',
         title: 'tiktok: mod descarga apk universal y apk plugin',
         keys: ['tiktok', 'tiktok mod', 'tiktok plus', 'tiptok', 'tiktop', 'tiptop'],
         link: '[https://apkw.ru/en/download/tik-tok-mod/'],
