@@ -598,6 +598,15 @@
             </svg>
             Restablecer
         </button>
+        <button class="side-btn" onclick="mostrarInformacion()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    Información
+</button>
+
     </div>
 </div>
 
@@ -610,13 +619,27 @@
         </div>
     </div>
 </div>
+<div id="info-modal" class="overlay" onclick="closeInfo()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin: 0;">Sobre Fylio</h3>
+            <button onclick="closeInfo()" style="background: none; border: none; cursor: pointer; font-size: 20px; color: var(--text-color);">✕</button>
+        </div>
+        <p style="font-size: 0.95rem; line-height: 1.6; opacity: 0.8;">
+            Fylio es un proyecto personal creado con el objetivo de facilitar el acceso a aplicaciones y archivos de forma sencilla.
+            La idea nació como una iniciativa independiente y continúa en desarrollo.<br><br>
+            Poco a poco se irán agregando nuevas aplicaciones, funciones y mejoras para ofrecer una experiencia cada vez mejor.<br><br>
+            Gracias por visitar Fylio y apoyar este proyecto.
+        </p>
+    </div>
+</div>
 
 <div id="loading-screen">
     <div id="loading-image" class="loading-image"></div>
     <h3 id="loading-title" class="loading-title"></h3>
     <p class="loading-text">Preparando enlace...</p>
-    
-    <div class="circular-loader-container" id="circular-loader">
+
+        <div class="circular-loader-container" id="circular-loader">
         <svg>
             <circle class="circle-bg" cx="50" cy="50" r="44"></circle>
             <circle class="circle-progress" id="circle-progress" cx="50" cy="50" r="44"></circle>
@@ -648,6 +671,7 @@
     // --- BASE DE DATOS CENTRALIZADA DE APPS ---
     const APPS_DATA = [
         {
+            
             id: 'whatsapp',
             title: 'WhatsApp Plus VCTM: yesiimods',
             keys: ['whatsapp', 'wasap', 'plus', 'whassap', 'wassap'],
@@ -664,6 +688,15 @@
             isImage: false,
             bgValue: '#00d2ff',
             bannerText: 'Capcut premium'
+        },
+        {
+        id: 'tiktok mod',
+        title: 'tiktok: mod descarga apk universal y apk plugin',
+        keys: ['tiktok', 'tiktok mod', 'tiktok plus', 'tiptok', 'tiktop', 'tiptop'],
+        link: 'https://apkw.ru/en/download/tik-tok-mod/',
+        isImage: true,
+        bgValue: 'linear-gradient(135deg, #00CBFF, #FF2200)',
+        bannerText: 'tiktok: mod menu'
         },
         {
             id: 'xupertv',
@@ -691,8 +724,7 @@
 
         if (window.loadingInterval) clearInterval(window.loadingInterval);
     }
-
-    function toggleModal(id) { 
+        function toggleModal(id) { 
         document.getElementById(id).style.display = 'flex';
         document.getElementById('welcome-text').style.display = 'none';
         document.getElementById('back-button').style.display = 'flex';
@@ -854,6 +886,17 @@
         document.getElementById('side-menu-content').innerHTML = sideMenuContent;
         resetToHome();
     }
+    // Abrir ventana de información
+function mostrarInformacion() {
+    resetToHome(); // Cierra el menú lateral primero
+    document.getElementById('info-modal').style.display = 'flex';
+}
+
+// Cerrar ventana de información
+function closeInfo() {
+    document.getElementById('info-modal').style.display = 'none';
+}
+
 </script>
 
 </body>
