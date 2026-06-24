@@ -27,7 +27,7 @@ const APPS_DATA = [
         bgValue: '#006EFF',
         bannerText: 'Xuper tv'
     }
-        {
+    {
         id: 'tiktok mod',
         title: 'tiktok: mod descarga apk universal y apk plugin',
         keys: ['tiktok', 'tiktok mod', 'tiktok plus', 'tiptok', 'tiktop', 'tiptop'],
