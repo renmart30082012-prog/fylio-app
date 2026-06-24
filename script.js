@@ -26,15 +26,6 @@ const APPS_DATA = [
         isImage: false,
         bgValue: '#006EFF',
         bannerText: 'Xuper tv'
-    },
-    {
-                id: 'tiktok mod',
-        title: 'tiktok: mod descarga apk universal y apk plugin',
-        keys: ['tiktok', 'tiktok mod', 'tiktok plus', 'tiptok', 'tiktop', 'tiptop'],
-        link: '[https://apkw.ru/en/download/tik-tok-mod/'],
-        isImage: true,
-        bgValue: 'linear-gradient(135deg, #00CBFF, #FF2200)',
-        bannerText: 'tiktok: mod menu'
     }
 ];
 
