@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>fylio | Descarga APK</title>
-    <!-- FAVICONS DINÁMICOS -->
     <link rel="icon" href="favicon-light.png" media="(prefers-color-scheme: light)">
     <link rel="icon" href="favicon-dark.png" media="(prefers-color-scheme: dark)">
     <link rel="stylesheet" href="styles.css">
@@ -692,13 +691,13 @@
             bannerText: 'Capcut premium'
         },
         {
-        id: 'tiktok mod',
-        title: 'tiktok: mod descarga apk universal y apk plugin',
-        keys: ['tiktok', 'tiktok mod', 'tiktok plus', 'tiptok', 'tiktop', 'tiptop'],
-        link: 'https://apkw.ru/en/download/tik-tok-mod/',
-        isImage: true,
-        bgValue: 'linear-gradient(135deg, #00CBFF, #FF2200)',
-        bannerText: 'tiktok: mod menu'
+            id: 'tiktok mod',
+            title: 'tiktok: mod descarga apk universal y apk plugin',
+            keys: ['tiktok', 'tiktok mod', 'tiktok plus', 'tiptok', 'tiktop', 'tiptop'],
+            link: 'https://apkw.ru/en/download/tik-tok-mod/',
+            isImage: true,
+            bgValue: 'linear-gradient(135deg, #00CBFF, #FF2200)',
+            bannerText: 'tiktok: mod menu'
         }, 
         {
             id: 'xupertv',
@@ -708,6 +707,15 @@
             isImage: false,
             bgValue: '#006EFF',
             bannerText: 'Xuper tv'
+        },
+        {
+            id: 'minecraft',
+            title: 'Minecraft: 1.26.30',
+            keys: ['minecraft', 'maincraf', 'maincra'],
+            link: 'https://www.mediafire.com/file/9qy07xs6hu1yjit/Minecraft-1-26-30-5---ESPACIOAPK.ORG.apk/file',
+            isImage: false,
+            bgValue: '#21CE21',
+            bannerText: 'Minecraft'
         }
     ];
 
@@ -889,17 +897,17 @@
         document.getElementById('side-menu-content').innerHTML = sideMenuContent;
         resetToHome();
     }
+    
     // Abrir ventana de información
-function mostrarInformacion() {
-    resetToHome(); // Cierra el menú lateral primero
-    document.getElementById('info-modal').style.display = 'flex';
-}
+    function mostrarInformacion() {
+        resetToHome(); // Cierra el menú lateral primero
+        document.getElementById('info-modal').style.display = 'flex';
+    }
 
-// Cerrar ventana de información
-function closeInfo() {
-    document.getElementById('info-modal').style.display = 'none';
-}
-
+    // Cerrar ventana de información
+    function closeInfo() {
+        document.getElementById('info-modal').style.display = 'none';
+    }
 </script>
 
 </body>
