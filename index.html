@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>fylio | Descarga APK</title>
-    <link rel="icon" href="favicon-light.png" media="(prefers-color-scheme: light)">
-    <link rel="icon" href="favicon-dark.png" media="(prefers-color-scheme: dark)">
+    <link class="favicon" rel="icon" href="favicon-light.png" media="(prefers-color-scheme: light)">
+    <link class="favicon" rel="icon" href="favicon-dark.png" media="(prefers-color-scheme: dark)">
     <link rel="stylesheet" href="styles.css">
     <meta property="og:title" content="fylio | Descarga APK">
     <meta property="og:description" content="Tu buscador y sitio web de descargas de APKs seguro y rápido.">
@@ -14,7 +14,7 @@
     <meta property="og:url" content="https://fylio-app.vercel.app/">
     <meta property="og:type" content="website">
     <style>
-        /* Variables y Modo Oscuro */
+        /* Variables globales - Tema Claro por defecto */
         :root {
             --bg-color: #f9f9f9;
             --danger: #dc3545;
@@ -26,15 +26,7 @@
             --svg-color: #000000;
         }
 
-        .dark-mode {
-            --bg-color: #1a1a1a;
-            --modal-bg: #2d2d2d;
-            --text-color: #f0f0f0;
-            --btn-border: #444444;
-            --svg-color: #ffffff;
-        }
-        
-        /* Detectar el modo oscuro del sistema automáticamente */
+        /* Detección automática del Modo Oscuro del sistema */
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg-color: #1a1a1a;
@@ -42,6 +34,17 @@
                 --text-color: #f0f0f0;
                 --btn-border: #444444;
                 --svg-color: #ffffff;
+            }
+            .animated-background {
+                background-color: #1a1a1a;
+            }
+            .animated-background::before,
+            .animated-background::after {
+                opacity: 0.35;
+            }
+            header {
+                background: rgba(26, 26, 26, 0.4) !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
             }
         }
 
@@ -56,13 +59,8 @@
             background-color: #ffffff;
             overflow: hidden;
             transition: background-color 0.4s ease;
-            /* Forzar aceleración de hardware en el contenedor */
             transform: translateZ(0);
             backface-visibility: hidden;
-        }
-
-        .dark-mode .animated-background {
-            background-color: #1a1a1a;
         }
 
         .animated-background::before,
@@ -76,9 +74,7 @@
             background: radial-gradient(circle at 20% 30%, #ffdfdf 0%, transparent 55%),
                         radial-gradient(circle at 80% 40%, #d1f7ff 0%, transparent 55%),
                         radial-gradient(circle at 40% 80%, #e0d1ff 0%, transparent 55%);
-            /* Bajamos el blur a 40px (antes 60px/80px) para liberar al procesador */
             filter: blur(40px); 
-            /* translate3d activa la tarjeta gráfica del celular para que no se pegue */
             transform: translate3d(0,0,0);
             will-change: transform;
             animation: liquid-movement-1 22s infinite alternate ease-in-out;
@@ -91,12 +87,6 @@
             opacity: 0.8;
         }
 
-        .dark-mode .animated-background::before,
-        .dark-mode .animated-background::after {
-            opacity: 0.35;
-        }
-
-        /* Animaciones usando translate3d en lugar de translate común */
         @keyframes liquid-movement-1 {
             0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
             50% { transform: translate3d(3vw, 4vh, 0) scale(1.05) rotate(45deg); }
@@ -138,14 +128,6 @@
             position: relative;
             z-index: 10;
         }
-        
-        .dark-mode header,
-        @media (prefers-color-scheme: dark) {
-            header {
-                background: rgba(26, 26, 26, 0.4) !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-            }
-        }
 
         .brand-container {
             align-items: center;
@@ -160,7 +142,8 @@
 
         .icon-group {
             display: flex;
-            gap: 20px;
+            align-items: center;
+            gap: 12px;
         }
 
         .icon-btn {
@@ -184,6 +167,56 @@
             stroke: var(--text-color);
             stroke-width: 2;
             width: 22px;
+        }
+
+        /* BARRA DE BÚSQUEDA EXPANSIBLE */
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 50px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 4px;
+            max-width: 36px;
+            overflow: hidden;
+        }
+
+        .search-box:focus-within,
+        .search-box:hover {
+            max-width: 220px;
+            background: rgba(128, 128, 128, 0.08);
+            border-color: var(--btn-border);
+            padding-left: 12px;
+            padding-right: 8px;
+        }
+
+        .search-box input {
+            width: 0;
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            transition: width 0.3s ease;
+            padding: 0;
+        }
+
+        .search-box:focus-within input,
+        .search-box:hover input {
+            width: 160px;
+            padding-left: 5px;
+        }
+
+        .search-box svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: var(--text-color);
+            stroke-width: 2;
+            cursor: pointer;
+            flex-shrink: 0;
         }
 
         /* Contenido Principal */
@@ -256,44 +289,6 @@
             stroke-width: 2;
             width: 18px;
         }
-
-        /* Input de búsqueda */
-        #search-modal input {
-            background: var(--bg-color);
-            border: 1px solid var(--btn-border);
-            border-radius: 8px;
-            color: var(--text-color);
-            font-size: 1rem;
-            margin-bottom: 16px;
-            outline: none;
-            padding: 12px 14px;
-            transition: border-color 0.2s;
-            width: 100%;
-        }
-
-        #search-modal input:focus { border-color: var(--primary); }
-
-        /* Contenedor de botones de búsqueda */
-        .buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        button.action-btn {
-            background: var(--modal-bg);
-            border: 1px solid var(--btn-border);
-            border-radius: 50px;
-            color: var(--text-color);
-            cursor: pointer;
-            flex: 1;
-            font-size: 0.95rem;
-            font-weight: 500;
-            padding: 10px;
-            transition: all 0.2s;
-        }
-
-        button.action-btn:hover { background: rgba(128,128,128,0.1); }
 
         /* Resultados de búsqueda */
         #search-results {
@@ -381,7 +376,7 @@
             opacity: 0.75;
         }
 
-        /* --- NUEVO CONTENEDOR CIRCULAR --- */
+        /* CONTENEDOR CIRCULAR */
         .circular-loader-container {
             position: relative;
             width: 100px;
@@ -395,14 +390,12 @@
             height: 100px;
         }
 
-        /* Círculo gris de fondo */
         .circle-bg {
             fill: none;
             stroke: var(--btn-border);
             stroke-width: 6;
         }
 
-        /* Círculo de color dinámico */
         .circle-progress {
             fill: none;
             stroke: var(--primary);
@@ -413,12 +406,10 @@
             transition: stroke-dashoffset 1s linear, stroke 0.3s;
         }
 
-        /* Cuando se completa, cambia a color verde */
         .circular-loader-container.complete .circle-progress {
             stroke: var(--success);
         }
 
-        /* Texto / Checkmark dentro del círculo */
         .circle-content {
             position: absolute;
             top: 50%;
@@ -444,7 +435,6 @@
             transform: none;
         }
 
-        /* Mostrar el checkmark al finalizar */
         .circular-loader-container.complete .circle-content svg {
             display: block;
         }
@@ -488,7 +478,7 @@
             width: 18px;
         }
 
-        /* Soporte (Carga en menú lateral) */
+        /* Soporte */
         .support-progress-container {
             background: var(--btn-border);
             border-radius: 4px;
@@ -562,17 +552,14 @@
         <span class="brand-name">fylio</span>
     </div>
     <div class="icon-group">
-        <button class="icon-btn" onclick="toggleModal('search-modal')">
-            <svg viewBox="0 0 24 24">
+        <!-- BARRA DE BÚSQUEDA INTEGRADA EN EL HEADER -->
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Buscar..." onkeypress="handleSearchKey(event)">
+            <svg viewBox="0 0 24 24" onclick="performSearch()">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-        </button>
-        <button id="theme-toggle" class="icon-btn" onclick="toggleTheme()">
-            <svg id="theme-icon" viewBox="0 0 24 24">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-        </button>
+        </div>
     </div>
 </header>
 
@@ -601,26 +588,16 @@
             Restablecer
         </button>
         <button class="side-btn" onclick="mostrarInformacion()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="8" x2="12" y2="12"></line>
-        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-    </svg>
-    Información
-</button>
-
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            Información
+        </button>
     </div>
 </div>
 
-<div id="search-modal" class="overlay" onclick="resetToHome()">
-    <div class="modal-box" onclick="event.stopPropagation()">
-        <input type="text" id="search-input" placeholder="Buscar..." value="">
-        <div class="buttons">
-            <button class="action-btn btn-cancel" onclick="resetToHome()">Cancelar</button>
-            <button class="action-btn btn-action" onclick="performSearch()">Buscar</button>
-        </div>
-    </div>
-</div>
 <div id="info-modal" class="overlay" onclick="closeInfo()">
     <div class="modal-box" onclick="event.stopPropagation()">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -655,10 +632,6 @@
     </div>
 
     <button id="download-btn" class="download-btn" disabled>
-        <svg id="lock-icon" class="lock-icon" viewBox="0 0 24 24">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-        </svg>
         <span id="btn-text">Loading...</span>
     </button>
 </div>
@@ -670,7 +643,7 @@
 </button>
 
 <script>
-    // --- BASE DE DATOS CENTRALIZADA DE APPS ---
+    // --- 1. BASE DE DATOS DE APLICACIONES (APKs) ---
     const APPS_DATA = [
         {
             id: 'whatsapp',
@@ -719,18 +692,32 @@
         }
     ];
 
+    // --- 2. BASE DE DATOS DE PELÍCULAS ---
+    const MOVIES_DATA = [
+        {
+            id: 'demon-slayer-castillo-infinito',
+            title: 'Demon Slayer: Castillo Infinito',
+            keys: ['demon slayer', 'castillo infinito', 'demon', 'slayer', 'castillo', 'infinito', 'kimetsu', 'kimetsu no yaiba'],
+            link: 'https://gofile.io/d/814jVB',
+            isImage: true,
+            bgValue: 'linear-gradient(135deg, #8b0000, #e50914)', 
+            bannerText: 'Demon slayer: infinity castle'
+        }
+    ];
+
     const sideMenuContent = document.getElementById('side-menu-content').innerHTML;
 
     function resetToHome() {
         if (window.supportInterval) cancelSupport();
         
-        ['side-menu', 'search-modal', 'loading-screen'].forEach(id => {
+        ['side-menu', 'loading-screen'].forEach(id => {
             document.getElementById(id).style.display = 'none';
         });
 
         document.getElementById('search-results').style.display = 'none';
         document.getElementById('welcome-text').style.display = 'block';
         document.getElementById('back-button').style.display = 'none';
+        document.getElementById('search-input').value = ''; // Limpia buscador al volver al inicio
 
         if (window.loadingInterval) clearInterval(window.loadingInterval);
     }
@@ -741,34 +728,12 @@
         document.getElementById('back-button').style.display = 'flex';
     }
 
-    const SUN_ICON = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
-    const MOON_ICON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-
-    function toggleTheme() {
-        const icon = document.getElementById('theme-icon');
-        let isDark = document.body.classList.contains('dark-mode');
-        
-        if (!isDark && !document.body.classList.length && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.body.classList.add('light-mode');
-            document.body.classList.remove('dark-mode');
-            icon.innerHTML = MOON_ICON;
-        } else {
-            isDark = document.body.classList.toggle('dark-mode');
-            icon.innerHTML = isDark ? SUN_ICON : MOON_ICON;
+    // Ejecuta la búsqueda al presionar la tecla Enter
+    function handleSearchKey(event) {
+        if (event.key === 'Enter') {
+            performSearch();
         }
     }
-
-    window.addEventListener('DOMContentLoaded', () => {
-        const icon = document.getElementById('theme-icon');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
-        if (prefersDark) {
-            document.body.classList.add('dark-mode');
-            icon.innerHTML = SUN_ICON;
-        } else {
-            icon.innerHTML = MOON_ICON;
-        }
-    });
 
     function performSearch() {
         const input = document.getElementById('search-input');
@@ -778,7 +743,7 @@
 
         resultsContainer.innerHTML = ''; 
         resultsContainer.style.display = 'none';
-        input.value = '';
+        input.blur(); // Contrae la barra de búsqueda automáticamente tras buscar
 
         if (!value) {
             resetToHome();
@@ -788,12 +753,13 @@
         welcomeText.style.display = 'none'; 
         let found = false;
 
+        // Buscar APKs
         APPS_DATA.forEach(app => {
             if (app.keys.some(k => value.includes(k))) {
                 const styleValue = app.isImage ? `background-image: ${app.bgValue};` : `background-color: ${app.bgValue};`;
                 
                 resultsContainer.innerHTML += `
-                    <div class="result-item" onclick="startLoading('${app.id}')">
+                    <div class="result-item" onclick="startLoading('${app.id}', 'app')">
                         <div class="banner-dynamic" style="${styleValue}">
                             ${app.bannerText}
                         </div>
@@ -802,20 +768,37 @@
                 found = true;
             }
         });
+
+        // Buscar Películas
+        MOVIES_DATA.forEach(movie => {
+            if (movie.keys.some(k => value.includes(k))) {
+                const styleValue = movie.isImage ? `background-image: ${movie.bgValue};` : `background-color: ${movie.bgValue};`;
+                
+                resultsContainer.innerHTML += `
+                    <div class="result-item" onclick="startLoading('${movie.id}', 'movie')">
+                        <div class="banner-dynamic" style="${styleValue}">
+                            ${movie.bannerText}
+                        </div>
+                        <h3 class="result-title">${movie.title}</h3>
+                    </div>`;
+                found = true;
+            }
+        });
         
         if (found) { 
             resultsContainer.style.display = 'block'; 
-            document.getElementById('search-modal').style.display = 'none';
             document.getElementById('back-button').style.display = 'flex';
         } else {
             welcomeText.style.display = 'block';
             welcomeText.innerHTML = `<h1>Sin resultados</h1><p class="intro-text">No encontramos nada para "${value}". Intenta otra búsqueda.</p>`;
-            document.getElementById('search-modal').style.display = 'none';
             document.getElementById('back-button').style.display = 'flex';
         }
     }
 
-    function startLoading(id) {
+    const PLAY_CIRCLE_ICON = `<svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16" fill="currentColor"></polygon></svg>`;
+    const LOCK_ICON = `<svg id="lock-icon" class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`;
+
+    function startLoading(id, type) {
         const screen = document.getElementById('loading-screen'), 
               img = document.getElementById('loading-image'), 
               title = document.getElementById('loading-title'), 
@@ -828,22 +811,29 @@
         img.style.backgroundImage = "none";
         img.style.backgroundColor = "transparent";
 
-        const app = APPS_DATA.find(a => a.id === id);
+        const item = type === 'movie' 
+            ? MOVIES_DATA.find(m => m.id === id) 
+            : APPS_DATA.find(a => a.id === id);
         
-        if (app) {
-            img.innerHTML = `<div style="color:white; font-size:40px; font-weight:bold;">${app.bannerText}</div>`;
-            if (app.isImage) {
-                img.style.backgroundImage = app.bgValue;
+        if (item) {
+            img.innerHTML = `<div style="color:white; font-size:40px; font-weight:bold;">${item.bannerText}</div>`;
+            if (item.isImage) {
+                img.style.backgroundImage = item.bgValue;
             } else {
-                img.style.backgroundColor = app.bgValue;
+                img.style.backgroundColor = item.bgValue;
             }
-            title.textContent = app.title;
-            btn.dataset.link = app.link;
+            title.textContent = item.title;
+            btn.dataset.link = item.link;
         }
 
         btn.classList.remove('active'); 
         btn.disabled = true; 
-        btn.innerHTML = `<svg id="lock-icon" class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Loading...`;
+        
+        if (type === 'movie') {
+            btn.innerHTML = `${PLAY_CIRCLE_ICON} Cargando...`;
+        } else {
+            btn.innerHTML = `${LOCK_ICON} Loading...`;
+        }
         
         const totalProgress = 276.46; 
         circleProgress.style.strokeDashoffset = totalProgress; 
@@ -869,7 +859,13 @@
             if (timeLeft <= 0) {
                 clearInterval(window.loadingInterval); 
                 loaderContainer.classList.add('complete'); 
-                btn.textContent = "Download"; 
+                
+                if (type === 'movie') {
+                    btn.innerHTML = `${PLAY_CIRCLE_ICON} Ver ahora`;
+                } else {
+                    btn.innerHTML = `Download`; 
+                }
+                
                 btn.classList.add('active'); 
                 btn.disabled = false; 
                 btn.onclick = () => window.location.href = btn.dataset.link;
@@ -898,13 +894,11 @@
         resetToHome();
     }
     
-    // Abrir ventana de información
     function mostrarInformacion() {
-        resetToHome(); // Cierra el menú lateral primero
+        resetToHome(); 
         document.getElementById('info-modal').style.display = 'flex';
     }
 
-    // Cerrar ventana de información
     function closeInfo() {
         document.getElementById('info-modal').style.display = 'none';
     }
