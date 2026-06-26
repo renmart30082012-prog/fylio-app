@@ -26,6 +26,18 @@
             --svg-color: #000000;
         }
 
+        /* Barra de progreso de carga inicial de la página */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), #00d2ff);
+            width: 0%;
+            z-index: 10000;
+            transition: width 0.4s ease, opacity 0.3s ease;
+        }
+
         /* Fondo Animado Líquido Optimizado (60 FPS) */
         .animated-background {
             position: fixed;
@@ -299,7 +311,7 @@
             width: 18px;
         }
 
-        /* Resultados de búsqueda */
+        /* Resultados de búsqueda con entrada animada y suavizada */
         #search-results {
             display: none;
             margin-top: 32px;
@@ -313,13 +325,128 @@
             cursor: pointer;
             margin-bottom: 24px;
             padding: 16px;
-            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: cardFadeIn 0.4s ease-out forwards;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                        box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                        border-color 0.3s ease;
         }
 
+        @keyframes cardFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animación suave al pasar el cursor o tocar (Dispositivos móviles) */
         .result-item:hover {
             border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+            transform: translateY(-4px) scale(1.01);
+        }
+        
+        .result-item:active {
+            transform: translateY(-1px) scale(0.99);
+        }
+
+        /* Etiquetas/Badges Inteligentes (Nuevo y Actualizado) */
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 5;
+            letter-spacing: 0.5px;
+        }
+        .badge-nuevo { background-color: var(--success); }
+        .badge-actualizado { background-color: #f39c12; }
+
+        /* Información técnica integrada del archivo */
+        .file-info-tags {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .info-tag {
+            background: rgba(128,128,128,0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+        }
+
+        /* Botón de Compartir Integrado en Tarjeta */
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 12px;
+            border-top: 1px solid rgba(128,128,128,0.08);
+            padding-top: 10px;
+        }
+
+        .share-card-btn {
+            background: transparent;
+            border: 1px solid var(--btn-border);
+            border-radius: 50px;
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .share-card-btn:hover {
+            background: rgba(128, 128, 128, 0.08);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .share-card-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        /* Notificación Toast Persistente para portapapeles */
+        .toast-notification {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
         .banner-dynamic {
@@ -546,6 +673,7 @@
 </head>
 <body>
 
+<div id="page-loader" class="page-loader"></div>
 <div class="animated-background"></div>
 
 <header>
@@ -587,6 +715,14 @@
             </svg>
             Soporte
         </button>
+        <button class="side-btn" onclick="mostrarNovedades()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+            Novedades
+        </button>
         <button class="side-btn" onclick="location.reload()">
             <svg viewBox="0 0 24 24">
                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
@@ -620,6 +756,25 @@
     </div>
 </div>
 
+<div id="novedades-modal" class="overlay" onclick="closeNovedades()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin: 0;">Novedades de la Web</h3>
+            <button onclick="closeNovedades()" style="background: none; border: none; cursor: pointer; font-size: 20px; color: var(--text-color);">✕</button>
+        </div>
+        <div style="font-size: 0.95rem; line-height: 1.6; opacity: 0.8; text-align: left;">
+            <p style="font-weight: 600; color: var(--primary); margin-bottom: 10px;">Versión de la Web: v1.5.0</p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li><strong>Barra de Carga:</strong> Nueva línea de progreso fluida incorporada al inicio.</li>
+                <li><strong>Fondo Líquido:</strong> Animación fluida a 60 FPS con aceleración por hardware.</li>
+                <li><strong>Tema Oscuro Inteligente:</strong> Colores adaptados automáticamente al sistema.</li>
+                <li><strong>Etiquetas Manuales:</strong> Control total de las insignias desde el código sin fechas automáticas.</li>
+                <li><strong>Botón de Compartir:</strong> Soporte móvil nativo y avisos flotantes en PC.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <div id="loading-screen">
     <div id="loading-image" class="loading-image"></div>
     <h3 id="loading-title" class="loading-title"></h3>
@@ -649,7 +804,26 @@
     </svg>
 </button>
 
+<div id="toast-notification" class="toast-notification">¡Enlace de la app copiado!</div>
+
 <script>
+    // Control de la barra de progreso inicial de carga de página
+    window.addEventListener('DOMContentLoaded', () => {
+        const pLoader = document.getElementById('page-loader');
+        pLoader.style.width = '40%';
+        setTimeout(() => { pLoader.style.width = '75%'; }, 150);
+    });
+
+    window.addEventListener('load', () => {
+        const pLoader = document.getElementById('page-loader');
+        pLoader.style.width = '100%';
+        setTimeout(() => {
+            pLoader.style.opacity = '0';
+            setTimeout(() => { pLoader.style.display = 'none'; }, 300);
+        }, 300);
+    });
+
+    // APPS DATA con metadatos técnicos y etiquetas de control manual
     const APPS_DATA = [
         {
             id: 'whatsapp',
@@ -658,7 +832,12 @@
             link: 'https://www.mediafire.com/file/il2w3t9djgdsnas/[COM.UNI]Plus_YesiiMods_V5.32.apk/file',
             isImage: true,
             bgValue: 'linear-gradient(135deg, #FF8512, #FF3E12)',
-            bannerText: 'WhatsApp Plus'
+            bannerText: 'WhatsApp Plus',
+            etiqueta: 'nuevo', // Control manual absoluto ('nuevo', 'actualizado' o '')
+            date: '2026-06-25',
+            fileName: '[COM.UNI]Plus_YesiiMods_V5.32.apk',
+            version: 'V5.32',
+            size: '198.85 MB'
         },
         {
             id: 'capcut',
@@ -667,7 +846,12 @@
             link: 'https://9mod.com/download/capcut-866/2',
             isImage: false,
             bgValue: '#00d2ff',
-            bannerText: 'Capcut premium'
+            bannerText: 'Capcut premium',
+            etiqueta: 'actualizado', // Control manual absoluto
+            date: '2026-06-20',
+            fileName: 'CapCut_Premium_v10.8.apk',
+            version: 'v10.8.0',
+            size: '199.2 MB'
         },
         {
             id: 'tiktok mod',
@@ -676,7 +860,12 @@
             link: 'https://apkw.ru/en/download/tik-tok-mod/',
             isImage: true,
             bgValue: 'linear-gradient(135deg, #00CBFF, #FF2200)',
-            bannerText: 'tiktok: mod menu'
+            bannerText: 'tiktok: mod menu',
+            etiqueta: '', // Vacío para quitar la etiqueta completamente
+            date: '2026-05-10',
+            fileName: 'TikTok_Mod_Universal.apk',
+            version: 'v32.5.4',
+            size: '710.7 MB'
         }, 
         {
             id: 'xupertv',
@@ -685,7 +874,12 @@
             link: 'https://www.mediafire.com/file/ewwiflzy9au1fo4/XuperHydra.apk/file',
             isImage: false,
             bgValue: '#006EFF',
-            bannerText: 'Xuper tv'
+            bannerText: 'Xuper tv',
+            etiqueta: 'nuevo',
+            date: '2026-06-24',
+            fileName: 'XuperHydra.apk',
+            version: 'v1.0.2',
+            size: '34.27 MB'
         },
         {
             id: 'minecraft',
@@ -694,7 +888,12 @@
             link: 'https://www.mediafire.com/file/9qy07xs6hu1yjit/Minecraft-1-26-30-5---ESPACIOAPK.ORG.apk/file',
             isImage: false,
             bgValue: '#21CE21',
-            bannerText: 'Minecraft'
+            bannerText: 'Minecraft',
+            etiqueta: 'nuevo',
+            date: '2026-06-22',
+            fileName: 'Minecraft-1-26-30-5.apk',
+            version: '1.26.30.05',
+            size: '769.2 MB'
         },
         {
             id: 'null royale',
@@ -703,7 +902,12 @@
             link: 'https://www.mediafire.com/file/yf66hkokz9umax7/nr_15.535.13_release_ff1c6c29.apk/file',
             isImage: true,
             bgValue: 'linear-gradient(135deg, #009DFF, #00008C)',
-            bannerText: 'clash royale: mod'
+            bannerText: 'clash royale: mod',
+            etiqueta: 'actualizado',
+            date: '2026-06-20',
+            fileName: 'nr_15.535.13_release.apk',
+            version: 'v15.535.13',
+            size: '757.69 MB'
         },
     ];
 
@@ -715,17 +919,48 @@
             link: 'https://gofile.io/d/814jVB',
             isImage: true,
             bgValue: 'linear-gradient(135deg, #8b0000, #e50914)', 
-            bannerText: 'Demon slayer: infinity castle'
+            bannerText: 'Demon slayer: infinity castle',
+            etiqueta: 'nuevo',
+            date: '2026-06-25'
         }
     ];
 
     const sideMenuContent = document.getElementById('side-menu-content').innerHTML;
 
+    // Renderizar etiquetas basándose únicamente en tu propiedad asignada manualmente
+    function calculateCardBadge(etiqueta) {
+        if (etiqueta === 'nuevo') {
+            return `<span class="card-badge badge-nuevo">Nuevo</span>`;
+        } else if (etiqueta === 'actualizado') {
+            return `<span class="card-badge badge-actualizado">Actualizado</span>`;
+        }
+        return '';
+    }
+
+    // Compartir link mediante API nativa o portapapeles
+    function shareElement(event, title, sharedLink) {
+        event.stopPropagation(); // Prevenir que abra la pantalla de descarga
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                text: `¡Descarga ${title} totalmente rápido en fylio!`,
+                url: sharedLink
+            }).catch(err => console.log('Error compartiendo:', err));
+        } else {
+            navigator.clipboard.writeText(sharedLink).then(() => {
+                const toast = document.getElementById('toast-notification');
+                toast.classList.add('show');
+                setTimeout(() => { toast.classList.remove('show'); }, 2500);
+            });
+        }
+    }
+
     function resetToHome() {
         if (window.supportInterval) cancelSupport();
         
-        ['side-menu', 'loading-screen'].forEach(id => {
-            document.getElementById(id).style.display = 'none';
+        ['side-menu', 'loading-screen', 'info-modal', 'novedades-modal'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
         });
 
         document.getElementById('search-results').style.display = 'none';
@@ -765,34 +1000,58 @@
 
         welcomeText.style.display = 'none'; 
         let found = false;
+        let animationIndex = 0;
 
         APPS_DATA.forEach(app => {
             if (app.keys.some(k => value.includes(k))) {
                 const styleValue = app.isImage ? `background-image: ${app.bgValue};` : `background-color: ${app.bgValue};`;
+                const tagBadge = calculateCardBadge(app.etiqueta);
                 
                 resultsContainer.innerHTML += `
-                    <div class="result-item" onclick="startLoading('${app.id}', 'app')">
+                    <div class="result-item" onclick="startLoading('${app.id}', 'app')" style="animation-delay: ${animationIndex * 0.08}s;">
+                        ${tagBadge}
                         <div class="banner-dynamic" style="${styleValue}">
                             ${app.bannerText}
                         </div>
                         <h3 class="result-title">${app.title}</h3>
+                        <div class="file-info-tags">
+                            <span class="info-tag">Archivo: ${app.fileName}</span>
+                            <span class="info-tag">Versión: ${app.version}</span>
+                            <span class="info-tag">Tamaño: ${app.size}</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="share-card-btn" onclick="shareElement(event, '${app.title.replace(/'/g, "\\'")}', '${app.link}')">
+                                <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                                Compartir
+                            </button>
+                        </div>
                     </div>`;
                 found = true;
+                animationIndex++;
             }
         });
 
         MOVIES_DATA.forEach(movie => {
             if (movie.keys.some(k => value.includes(k))) {
                 const styleValue = movie.isImage ? `background-image: ${movie.bgValue};` : `background-color: ${movie.bgValue};`;
+                const tagBadge = calculateCardBadge(movie.etiqueta);
                 
                 resultsContainer.innerHTML += `
-                    <div class="result-item" onclick="startLoading('${movie.id}', 'movie')">
+                    <div class="result-item" onclick="startLoading('${movie.id}', 'movie')" style="animation-delay: ${animationIndex * 0.08}s;">
+                        ${tagBadge}
                         <div class="banner-dynamic" style="${styleValue}">
                             ${movie.bannerText}
                         </div>
                         <h3 class="result-title">${movie.title}</h3>
+                        <div class="card-actions">
+                            <button class="share-card-btn" onclick="shareElement(event, '${movie.title.replace(/'/g, "\\'")}', '${movie.link}')">
+                                <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                                Compartir
+                            </button>
+                        </div>
                     </div>`;
                 found = true;
+                animationIndex++;
             }
         });
         
@@ -913,7 +1172,16 @@
     function closeInfo() {
         document.getElementById('info-modal').style.display = 'none';
     }
+
+    function mostrarNovedades() {
+        resetToHome();
+        document.getElementById('novedades-modal').style.display = 'flex';
+    }
+
+    function closeNovedades() {
+        document.getElementById('novedades-modal').style.display = 'none';
+    }
 </script>
 
 </body>
-            </html>
+</html>
