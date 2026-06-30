@@ -25,6 +25,9 @@
             --text-color: #333;
             --btn-border: #d1d5db;
             --svg-color: #000000;
+            --float-icon-color: #a0a0a0;
+            --nav-bg: #ffffff;
+            --nav-icon-color: #000000;
         }
 
         /* Barra de progreso de carga inicial de la página */
@@ -78,6 +81,32 @@
             opacity: 0.8;
         }
 
+        /* Iconos de fondo con movimientos suaves */
+        .floating-icons-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-icon {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            color: var(--float-icon-color);
+            opacity: 0.35;
+            animation: soft-float 16s infinite ease-in-out alternate;
+        }
+
+        @keyframes soft-float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(20px, -30px) rotate(10deg); }
+            100% { transform: translate(-10px, 20px) rotate(-10deg); }
+        }
+
         /* DETECCIÓN AUTOMÁTICA DEL MODO OSCURO */
         @media (prefers-color-scheme: dark) {
             :root {
@@ -87,11 +116,13 @@
                 --btn-border: #2d3139;
                 --svg-color: #ffffff;
                 --primary: #388bfd;
+                --float-icon-color: #b0b3b8;
+                --nav-bg: #161920;
+                --nav-icon-color: #ffffff;
             }
             .animated-background {
                 background-color: #0d0f14;
             }
-            /* Esferas líquidas oscurecidas con tonos neón sutiles para que el texto sea 100% legible */
             .animated-background::before {
                 background: radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.12) 0%, transparent 55%),
                             radial-gradient(circle at 80% 40%, rgba(56, 139, 253, 0.12) 0%, transparent 55%),
@@ -137,7 +168,7 @@
             overflow-x: hidden;
         }
 
-        /* Header */
+        /* Header Reestructurado */
         header {
             align-items: center;
             background: rgba(255, 255, 255, 0.4); 
@@ -154,18 +185,18 @@
         .brand-container {
             align-items: center;
             display: flex;
-            gap: 12px;
+            gap: 8px;
+        }
+
+        .brand-logo {
+            height: 24px;
+            width: auto;
+            display: block;
         }
 
         .brand-name {
             font-size: 1.25rem;
             font-weight: 600;
-        }
-
-        .icon-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
         }
 
         .icon-btn {
@@ -191,61 +222,52 @@
             width: 22px;
         }
 
-        /* Barra de búsqueda expansible */
-        .search-box {
+        /* Nueva barra de búsqueda completa abajo */
+        .search-container-full {
             position: relative;
             display: flex;
             align-items: center;
-            background: transparent;
-            border: 1px solid transparent;
-            border-radius: 50px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 4px;
-            max-width: 36px;
-            overflow: hidden;
-        }
-
-        .search-box:focus-within,
-        .search-box:hover {
-            max-width: 220px;
             background: rgba(128, 128, 128, 0.08);
-            border-color: var(--btn-border);
-            padding-left: 12px;
-            padding-right: 8px;
+            border: 1px solid var(--btn-border);
+            border-radius: 50px;
+            padding: 10px 20px;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
-        .search-box input {
-            width: 0;
+        .search-container-full input {
+            width: 100%;
             background: none;
             border: none;
             outline: none;
             color: var(--text-color);
-            font-size: 0.95rem;
-            transition: width 0.3s ease;
-            padding: 0;
+            font-size: 1rem;
         }
 
-        .search-box:focus-within input,
-        .search-box:hover input {
-            width: 160px;
-            padding-left: 5px;
-        }
-
-        .search-box svg {
+        .search-container-full svg {
             width: 20px;
             height: 20px;
             fill: none;
             stroke: var(--text-color);
             stroke-width: 2;
             cursor: pointer;
-            flex-shrink: 0;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+
+        /* La lupa solo aparece al escribir algo */
+        .search-container-full input:not(:placeholder-shown) + svg {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         /* Contenido Principal */
         main {
             margin: 0 auto;
             max-width: 500px;
-            padding: 40px 20px;
+            padding: 40px 20px 100px; /* Margen inferior para no tapar con la barra de WhatsApp */
             text-align: center;
         }
 
@@ -431,7 +453,7 @@
         /* Notificación Toast Persistente para portapapeles */
         .toast-notification {
             position: fixed;
-            bottom: 80px;
+            bottom: 90px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
             background: rgba(0, 0, 0, 0.85);
@@ -658,7 +680,7 @@
             background: var(--primary);
             border: none;
             border-radius: 50%;
-            bottom: 20px;
+            bottom: 90px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             color: white;
             cursor: pointer;
@@ -668,34 +690,85 @@
             position: fixed;
             right: 20px;
             width: 50px;
+            z-index: 9998;
+        }
+
+        /* Barra de navegación inferior estilo WhatsApp */
+        .bottom-nav-whatsapp {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--nav-bg);
+            border-top: 1px solid var(--btn-border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
             z-index: 9999;
+            box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+        }
+
+        .nav-whatsapp-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+            width: 20%;
+        }
+
+        .nav-whatsapp-item svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--nav-icon-color);
+            fill: none;
+            stroke-width: 2;
+            margin-bottom: 2px;
         }
     </style>
 </head>
 <body>
 
 <div id="page-loader" class="page-loader"></div>
-<div class="animated-background"></div>
+
+<div class="animated-background">
+    <!-- Iconos de fondo con diseño simple y posicionamiento aleatorio alterado -->
+    <div class="floating-icons-container">
+        <!-- Mando de consola -->
+        <svg class="floating-icon" style="top: 15%; left: 10%; animation-delay: 0s; animation-duration: 14s;" viewBox="0 0 24 24"><path d="M6 9h12a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-3a3 3 0 0 1 3-3z" stroke="currentColor" stroke-width="1.5"/></svg>
+        <svg class="floating-icon" style="top: 65%; left: 75%; animation-delay: -3s; animation-duration: 18s;" viewBox="0 0 24 24"><path d="M6 9h12a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-3a3 3 0 0 1 3-3z" stroke="currentColor" stroke-width="1.5"/></svg>
+        <!-- Carpeta -->
+        <svg class="floating-icon" style="top: 25%; left: 80%; animation-delay: -1s; animation-duration: 16s;" viewBox="0 0 24 24"><path d="M2 6a2 2 0 0 1 2-2h4l2 2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z" stroke="currentColor" stroke-width="1.5"/></svg>
+        <svg class="floating-icon" style="top: 80%; left: 20%; animation-delay: -5s; animation-duration: 15s;" viewBox="0 0 24 24"><path d="M2 6a2 2 0 0 1 2-2h4l2 2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z" stroke="currentColor" stroke-width="1.5"/></svg>
+        <!-- Cuatro cuadrados -->
+        <svg class="floating-icon" style="top: 45%; left: 15%; animation-delay: -2s; animation-duration: 12s;" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="15" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="15" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+        <svg class="floating-icon" style="top: 10%; left: 50%; animation-delay: -7s; animation-duration: 20s;" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="15" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="15" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+        <!-- Claqueta -->
+        <svg class="floating-icon" style="top: 50%; left: 85%; animation-delay: -4s; animation-duration: 19s;" viewBox="0 0 24 24"><path d="M3 5h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM3 9h18" stroke="currentColor" stroke-width="1.5"/></svg>
+        <svg class="floating-icon" style="top: 85%; left: 55%; animation-delay: -6s; animation-duration: 13s;" viewBox="0 0 24 24"><path d="M3 5h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM3 9h18" stroke="currentColor" stroke-width="1.5"/></svg>
+        <!-- Cabeza de Android -->
+        <svg class="floating-icon" style="top: 35%; left: 45%; animation-delay: -3.5s; animation-duration: 17s;" viewBox="0 0 24 24"><path d="M6 14a6 6 0 0 1 12 0H6zm3-4l-1-2m7 2l1-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <svg class="floating-icon" style="top: 70%; left: 5%; animation-delay: -1.5s; animation-duration: 14s;" viewBox="0 0 24 24"><path d="M6 14a6 6 0 0 1 12 0H6zm3-4l-1-2m7 2l1-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+</div>
 
 <header>
+    <button class="icon-btn" onclick="toggleModal('side-menu')">
+        <svg viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
     <div class="brand-container">
-        <button class="icon-btn" onclick="toggleModal('side-menu')">
-            <svg viewBox="0 0 24 24">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-        </button>
-        <span class="brand-name">fylio</span>
-    </div>
-    <div class="icon-group">
-        <div class="search-box">
-            <input type="text" id="search-input" placeholder="Buscar..." onkeypress="handleSearchKey(event)">
-            <svg viewBox="0 0 24 24" onclick="performSearch()">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-        </div>
+        <!-- Espacio listo para colocar el logo con imagen -->
+        <img src="logo.png" alt="" class="brand-logo" onerror="this.style.display='none'">
+        <span class="brand-name">Fylio</span>
     </div>
 </header>
 
@@ -704,6 +777,16 @@
         <h1>Bienvenido</h1>
         <p class="intro-text">Estamos iniciando pero poco a poco añadiremos más apps y archivos para ti</p>
     </div>
+
+    <!-- Barra de búsqueda reposicionada abajo completa y con lupa inteligente -->
+    <div class="search-container-full">
+        <input type="text" id="search-input" placeholder="Buscar..." onkeypress="handleSearchKey(event)">
+        <svg viewBox="0 0 24 24" onclick="performSearch()">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+    </div>
+
     <div id="search-results"></div>
 </main>
 
@@ -807,6 +890,30 @@
 
 <div id="toast-notification" class="toast-notification">¡Enlace de la app copiado!</div>
 
+<!-- Barra de navegación inferior detallada estilo WhatsApp -->
+<div class="bottom-nav-whatsapp">
+    <button class="nav-whatsapp-item" onclick="resetToHome()">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
+        <span>inicio</span>
+    </button>
+    <button class="nav-whatsapp-item" onclick="filterByCategory('app')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" ry="4"/></svg>
+        <span>app</span>
+    </button>
+    <button class="nav-whatsapp-item" onclick="filterByCategory('juego')">
+        <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 12h4M8 10v4M16 11h.01M18 13h.01" stroke-linecap="round"/></svg>
+        <span>juegos</span>
+    </button>
+    <button class="nav-whatsapp-item" onclick="filterByCategory('archivo')">
+        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <span>archivos</span>
+    </button>
+    <button class="nav-whatsapp-item" onclick="filterByCategory('película')">
+        <svg viewBox="0 0 24 24"><path d="M2 22h20V7H2v15zM2 7l4-4h3l-4 4M9 7l4-4h3l-4 4M16 7l4-4h2l-4 4" stroke-linejoin="round"/></svg>
+        <span>películas</span>
+    </button>
+</div>
+
 <script>
     // Control de la barra de progreso inicial de carga de página
     window.addEventListener('DOMContentLoaded', () => {
@@ -824,7 +931,7 @@
         }, 300);
     });
 
-    // APPS DATA con metadatos técnicos y etiquetas de control manual
+    // APPS DATA con adición del campo de categorías específicas solicitado
     const APPS_DATA = [
         {
             id: 'whatsapp',
@@ -834,11 +941,12 @@
             isImage: true,
             bgValue: 'linear-gradient(135deg, #FF8512, #FF3E12)',
             bannerText: 'WhatsApp Plus',
-            etiqueta: 'actualizado', // Control manual absoluto ('nuevo', 'actualizado' o '')
+            etiqueta: 'actualizado', 
             date: '2026-06-27',
             fileName: '[COM.UNI]Plus_YesiiMods_V5.34.apk',
             version: 'V5.34',
-            size: '208.51 MB'
+            size: '208.51 MB',
+            category: 'app'
         },
         {
             id: 'capcut pro',
@@ -848,11 +956,12 @@
             isImage: false,
             bgValue: '#00d2ff',
             bannerText: 'Capcut premium',
-            etiqueta: 'actualizado', // Control manual absoluto
+            etiqueta: 'actualizado', 
             date: '2026-06-27',
             fileName: 'CapCut_Premium_v18.1.0.apk',
             version: 'v18.1.0',
-            size: '280.3 MB'
+            size: '280.3 MB',
+            category: 'app'
         },
         {
             id: 'tiktok mod',
@@ -862,11 +971,12 @@
             isImage: true,
             bgValue: 'linear-gradient(135deg, #00CBFF, #FF2200)',
             bannerText: 'tiktok: mod menu',
-            etiqueta: '', // Vacío para quitar la etiqueta completamente
+            etiqueta: '', 
             date: '2026-05-10',
             fileName: 'TikTok_Mod_Universal.apk',
             version: 'v32.5.4',
-            size: '710.7 MB'
+            size: '710.7 MB',
+            category: 'app'
         }, 
         {
             id: 'xupertv',
@@ -880,7 +990,8 @@
             date: '2026-06-24',
             fileName: 'XuperHydra.apk',
             version: 'v1.0.2',
-            size: '34.27 MB'
+            size: '34.27 MB',
+            category: 'app'
         },
         {
             id: 'minecraft',
@@ -894,7 +1005,8 @@
             date: '2026-06-22',
             fileName: 'Minecraft-1-26-30-5.apk',
             version: '1.26.30.05',
-            size: '769.2 MB'
+            size: '769.2 MB',
+            category: 'juego'
         },
         {
             id: 'null royale',
@@ -908,7 +1020,8 @@
             date: '2026-06-20',
             fileName: 'nr_15.535.13_release.apk',
             version: 'v15.535.13',
-            size: '757.69 MB'
+            size: '757.69 MB',
+            category: 'juego'
         }, 
         {
             id: 'sk tech',
@@ -922,7 +1035,8 @@
             date: '2026-06-26',
             fileName: 'SK_Tech_2.6.apk',
             version: 'v2.6',
-            size: '28.26 MB'
+            size: '28.26 MB',
+            category: 'app'
         },
     ];
 
@@ -936,7 +1050,8 @@
             bgValue: 'linear-gradient(135deg, #8b0000, #e50914)', 
             bannerText: 'Demon slayer: infinity castle',
             etiqueta: 'nuevo',
-            date: '2026-06-25'
+            date: '2026-06-25',
+            category: 'película'
         }
     ];
 
@@ -954,7 +1069,7 @@
 
     // Compartir link mediante API nativa o portapapeles
     function shareElement(event, title, sharedLink) {
-        event.stopPropagation(); // Prevenir que abra la pantalla de descarga
+        event.stopPropagation(); 
         if (navigator.share) {
             navigator.share({
                 title: title,
@@ -1076,6 +1191,67 @@
         } else {
             welcomeText.style.display = 'block';
             welcomeText.innerHTML = `<h1>Sin resultados</h1><p class="intro-text">No encontramos nada para "${value}". Intenta otra búsqueda.</p>`;
+            document.getElementById('back-button').style.display = 'flex';
+        }
+    }
+
+    // Nueva función para el filtrado exacto desde la barra inferior de categorías
+    function filterByCategory(cat) {
+        const resultsContainer = document.getElementById('search-results');
+        const welcomeText = document.getElementById('welcome-text');
+        
+        resultsContainer.innerHTML = ''; 
+        resultsContainer.style.display = 'none';
+        document.getElementById('search-input').value = '';
+
+        welcomeText.style.display = 'none'; 
+        let found = false;
+        let animationIndex = 0;
+
+        const allItems = [...APPS_DATA, ...MOVIES_DATA];
+
+        allItems.forEach(item => {
+            if (item.category === cat) {
+                const styleValue = item.isImage ? `background-image: ${item.bgValue};` : `background-color: ${item.bgValue};`;
+                const tagBadge = calculateCardBadge(item.etiqueta);
+                const isApp = item.fileName ? 'app' : 'movie';
+                
+                let technicalTags = '';
+                if (item.fileName) {
+                    technicalTags = `
+                        <div class="file-info-tags">
+                            <span class="info-tag">Archivo: ${item.fileName}</span>
+                            <span class="info-tag">Versión: ${item.version}</span>
+                            <span class="info-tag">Tamaño: ${item.size}</span>
+                        </div>`;
+                }
+
+                resultsContainer.innerHTML += `
+                    <div class="result-item" onclick="startLoading('${item.id}', '${isApp}')" style="animation-delay: ${animationIndex * 0.08}s;">
+                        ${tagBadge}
+                        <div class="banner-dynamic" style="${styleValue}">
+                            ${item.bannerText}
+                        </div>
+                        <h3 class="result-title">${item.title}</h3>
+                        ${technicalTags}
+                        <div class="card-actions">
+                            <button class="share-card-btn" onclick="shareElement(event, '${item.title.replace(/'/g, "\\'")}', '${item.link}')">
+                                <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                                Compartir
+                            </button>
+                        </div>
+                    </div>`;
+                found = true;
+                animationIndex++;
+            }
+        });
+
+        if (found) {
+            resultsContainer.style.display = 'block';
+            document.getElementById('back-button').style.display = 'flex';
+        } else {
+            resultsContainer.style.display = 'block';
+            resultsContainer.innerHTML = `<h1>Sin contenido</h1><p class="intro-text">Por el momento no hay elementos cargados en esta sección.</p>`;
             document.getElementById('back-button').style.display = 'flex';
         }
     }
