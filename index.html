@@ -159,6 +159,7 @@
             margin: 0;
             padding: 0;
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            -webkit-tap-highlight-color: transparent; /* ELIMINA EL EFECTO AZUL AL TOCAR EN MÓVILES */
         }
 
         body {
@@ -234,6 +235,7 @@
             width: 100%;
             margin: 20px 0;
             box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            z-index: 2;
         }
 
         .search-container-full input {
@@ -261,6 +263,64 @@
         .search-container-full input:not(:placeholder-shown) + svg {
             opacity: 1;
             pointer-events: auto;
+        }
+
+        /* Estilos del Historial de Búsquedas Recientes MODIFICADO A TU GUSTO */
+        .recent-searches-container {
+            display: none;
+            background: rgba(128, 128, 128, 0.08); /* Mismo color de la barra de búsqueda */
+            backdrop-filter: blur(10px); /* Mismo efecto de cristal */
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--btn-border);
+            border-radius: 20px;
+            padding: 15px;
+            margin: -10px 0 20px 0;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            text-align: left;
+            position: relative;
+            z-index: 1;
+            animation: fadeDown 0.3s ease;
+        }
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .recent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--float-icon-color);
+            margin-bottom: 10px;
+            padding: 0 5px;
+        }
+        .recent-header button {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .recent-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.2s;
+            color: var(--text-color);
+        }
+        .recent-item:hover {
+            background: rgba(128, 128, 128, 0.08);
+        }
+        .recent-item svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--float-icon-color);
         }
 
         /* Contenido Principal */
@@ -376,7 +436,7 @@
             transform: translateY(-1px) scale(0.99);
         }
 
-        /* Etiquetas/Badges Inteligentes (Nuevo y Actualizado) */
+        /* Etiquetas/Badges Inteligentes */
         .card-badge {
             position: absolute;
             top: 10px;
@@ -707,6 +767,23 @@
             padding: 8px 0;
             z-index: 9999;
             box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+            touch-action: none; /* Esto permite deslizar la barra limpiamente sin scroll en móvil */
+        }
+
+        /* Estilos de la burbuja animada (Liquid Glass) - MODIFICADA ALARGADA */
+        .nav-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 85%; /* Más alta y rellenando más espacio */
+            background: rgba(128, 128, 128, 0.08);
+            border: 1px solid var(--btn-border);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 0;
+            transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1), width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
         }
 
         .nav-whatsapp-item {
@@ -719,7 +796,10 @@
             cursor: pointer;
             font-size: 11px;
             font-weight: 500;
-            flex: 1; /* Permite que todos los botones se adapten al espacio disponible */
+            flex: 1;
+            position: relative;
+            z-index: 1;
+            padding: 4px 0;
         }
 
         .nav-whatsapp-item svg {
@@ -780,11 +860,20 @@
 
     <!-- Barra de búsqueda reposicionada abajo completa y con lupa inteligente -->
     <div class="search-container-full">
-        <input type="text" id="search-input" placeholder="Buscar..." onkeypress="handleSearchKey(event)">
+        <input type="text" id="search-input" placeholder="Buscar..." onkeypress="handleSearchKey(event)" onfocus="showRecents()" onblur="hideRecentsDelayed()">
         <svg viewBox="0 0 24 24" onclick="performSearch()">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
+    </div>
+
+    <!-- Sección de Buscado Recientemente -->
+    <div id="recent-searches" class="recent-searches-container">
+        <div class="recent-header">
+            <span>Buscado recientemente</span>
+            <button onmousedown="clearRecents()">Borrar</button>
+        </div>
+        <div id="recent-list"></div>
     </div>
 
     <div id="search-results"></div>
@@ -892,6 +981,8 @@
 
 <!-- Barra de navegación inferior detallada estilo WhatsApp -->
 <div class="bottom-nav-whatsapp">
+    <div id="nav-indicator" class="nav-indicator"></div> <!-- El coso deslizable -->
+    
     <button class="nav-whatsapp-item" onclick="resetToHome()">
         <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
         <span>inicio</span>
@@ -912,7 +1003,6 @@
         <svg viewBox="0 0 24 24"><path d="M2 22h20V7H2v15zM2 7l4-4h3l-4 4M9 7l4-4h3l-4 4M16 7l4-4h2l-4 4" stroke-linejoin="round"/></svg>
         <span>películas</span>
     </button>
-    <!-- Nueva sección de Herramientas añadida -->
     <button class="nav-whatsapp-item" onclick="filterByCategory('herramienta')">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         <span>herramientas</span>
@@ -920,11 +1010,81 @@
 </div>
 
 <script>
-    // Control de la barra de progreso inicial de carga de página
+    // Control de la barra de progreso inicial de carga de página y lógica táctil
     window.addEventListener('DOMContentLoaded', () => {
         const pLoader = document.getElementById('page-loader');
         pLoader.style.width = '40%';
         setTimeout(() => { pLoader.style.width = '75%'; }, 150);
+        
+        // Inicializar posición de burbuja deslizable en "inicio"
+        setTimeout(() => {
+            const btns = document.querySelectorAll('.nav-whatsapp-item');
+            if(btns.length > 0) updateNavIndicator(btns[0]);
+        }, 100);
+
+        // --- INICIO DE LA LÓGICA DE DESLIZAMIENTO TÁCTIL ---
+        const navContainer = document.querySelector('.bottom-nav-whatsapp');
+        const indicator = document.getElementById('nav-indicator');
+        let isDraggingIndicator = false;
+        let startX = 0;
+
+        if(navContainer && indicator) {
+            navContainer.addEventListener('touchstart', (e) => {
+                isDraggingIndicator = false;
+                startX = e.touches[0].clientX;
+            }, { passive: true });
+
+            navContainer.addEventListener('touchmove', (e) => {
+                const touchX = e.touches[0].clientX;
+                
+                // Si mueve el dedo una distancia razonable (arrastre intencional)
+                if (Math.abs(touchX - startX) > 8) { 
+                    isDraggingIndicator = true;
+                    indicator.style.transition = 'none'; // Sigue el dedo de inmediato
+                    
+                    const navRect = navContainer.getBoundingClientRect();
+                    let newLeft = touchX - navRect.left - (indicator.offsetWidth / 2);
+                    
+                    // Límites de los bordes
+                    if (newLeft < 0) newLeft = 0;
+                    if (newLeft > navRect.width - indicator.offsetWidth) newLeft = navRect.width - indicator.offsetWidth;
+                    
+                    indicator.style.left = `${newLeft}px`;
+                }
+            }, { passive: true });
+
+            navContainer.addEventListener('touchend', (e) => {
+                // Restaurar la animación fluida
+                indicator.style.transition = 'left 0.4s cubic-bezier(0.25, 1, 0.5, 1), width 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                
+                if (isDraggingIndicator) {
+                    const navBtns = Array.from(document.querySelectorAll('.nav-whatsapp-item'));
+                    const navRect = navContainer.getBoundingClientRect();
+                    const indicatorCenter = parseFloat(indicator.style.left) + (indicator.offsetWidth / 2);
+                    
+                    let closestBtn = navBtns[0];
+                    let minDistance = Infinity;
+                    
+                    // Calcular matemáticamente en qué botón cayó el dedo al soltar
+                    navBtns.forEach(btn => {
+                        const btnRect = btn.getBoundingClientRect();
+                        const btnCenter = btnRect.left - navRect.left + (btnRect.width / 2);
+                        const distance = Math.abs(indicatorCenter - btnCenter);
+                        
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestBtn = btn;
+                        }
+                    });
+                    
+                    if (closestBtn) {
+                        // Simular el toque en la sección calculada
+                        closestBtn.click(); 
+                    }
+                }
+            });
+        }
+        // --- FIN DE LA LÓGICA DE DESLIZAMIENTO TÁCTIL ---
     });
 
     window.addEventListener('load', () => {
@@ -936,7 +1096,82 @@
         }, 300);
     });
 
-    // APPS DATA con adición del campo de categorías específicas solicitado
+    // Ajustar burbuja al redimensionar ventana
+    window.addEventListener('resize', () => {
+        const activeBtn = document.querySelector('.nav-whatsapp-item[data-active="true"]') || document.querySelectorAll('.nav-whatsapp-item')[0];
+        updateNavIndicator(activeBtn);
+    });
+
+    // Función para actualizar posición de la burbuja animada (Modificada a 95% de ancho para ser alargada)
+    function updateNavIndicator(btn) {
+        const indicator = document.getElementById('nav-indicator');
+        const nav = document.querySelector('.bottom-nav-whatsapp');
+        if(!indicator || !btn) return;
+        
+        document.querySelectorAll('.nav-whatsapp-item').forEach(b => b.removeAttribute('data-active'));
+        btn.setAttribute('data-active', 'true');
+        
+        const navRect = nav.getBoundingClientRect();
+        const btnRect = btn.getBoundingClientRect();
+        
+        // El ancho es ahora el 95% del botón, haciéndolo rectangular con esquinas curvas
+        indicator.style.width = `${btnRect.width * 0.95}px`;
+        indicator.style.left = `${btnRect.left - navRect.left + (btnRect.width * 0.025)}px`;
+    }
+
+    // Lógica para historial de búsquedas recientes
+    let recentSearches = JSON.parse(localStorage.getItem('fylio_recents')) || [];
+
+    function saveSearch(term) {
+        if(!term) return;
+        recentSearches = recentSearches.filter(t => t.toLowerCase() !== term.toLowerCase());
+        recentSearches.unshift(term);
+        if(recentSearches.length > 5) recentSearches.pop(); // Limitar a 5
+        localStorage.setItem('fylio_recents', JSON.stringify(recentSearches));
+    }
+
+    function renderRecents() {
+        const list = document.getElementById('recent-list');
+        const container = document.getElementById('recent-searches');
+        if(recentSearches.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+        list.innerHTML = recentSearches.map(term => `
+            <div class="recent-item" onmousedown="applyRecentSearch('${term.replace(/'/g, "\\'")}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                ${term}
+            </div>
+        `).join('');
+    }
+
+    function showRecents() {
+        renderRecents();
+        if(recentSearches.length > 0) {
+            document.getElementById('recent-searches').style.display = 'block';
+        }
+    }
+
+    function hideRecentsDelayed() {
+        setTimeout(() => {
+            document.getElementById('recent-searches').style.display = 'none';
+        }, 150);
+    }
+
+    function clearRecents() {
+        recentSearches = [];
+        localStorage.removeItem('fylio_recents');
+        document.getElementById('recent-searches').style.display = 'none';
+    }
+
+    function applyRecentSearch(term) {
+        document.getElementById('search-input').value = term;
+        performSearch();
+    }
+
     const APPS_DATA = [
         {
             id: 'whatsapp',
@@ -1122,7 +1357,6 @@
 
     const sideMenuContent = document.getElementById('side-menu-content').innerHTML;
 
-    // Renderizar etiquetas basándose únicamente en tu propiedad asignada manualmente
     function calculateCardBadge(etiqueta) {
         if (etiqueta === 'nuevo') {
             return `<span class="card-badge badge-nuevo">Nuevo</span>`;
@@ -1132,7 +1366,6 @@
         return '';
     }
 
-    // Compartir link mediante API nativa o portapapeles
     function shareElement(event, title, sharedLink) {
         event.stopPropagation(); 
         if (navigator.share) {
@@ -1164,6 +1397,10 @@
         document.getElementById('search-input').value = ''; 
 
         if (window.loadingInterval) clearInterval(window.loadingInterval);
+
+        // Mover burbuja al inicio
+        const btns = document.querySelectorAll('.nav-whatsapp-item');
+        if(btns.length > 0) updateNavIndicator(btns[0]);
     }
 
     function toggleModal(id) { 
@@ -1193,12 +1430,13 @@
             return;
         }
 
+        saveSearch(input.value.trim());
+
         welcomeText.style.display = 'none'; 
         let found = false;
         let animationIndex = 0;
 
         APPS_DATA.forEach(app => {
-            // Se mejoró la lógica de búsqueda para que valide mejor los resultados parciales
             if (app.keys.some(k => k.toLowerCase().includes(value) || value.includes(k.toLowerCase()))) {
                 const styleValue = app.isImage ? `background-image: ${app.bgValue};` : `background-color: ${app.bgValue};`;
                 const tagBadge = calculateCardBadge(app.etiqueta);
@@ -1261,7 +1499,6 @@
         }
     }
 
-    // Nueva función para el filtrado exacto desde la barra inferior de categorías
     function filterByCategory(cat) {
         const resultsContainer = document.getElementById('search-results');
         const welcomeText = document.getElementById('welcome-text');
@@ -1311,6 +1548,12 @@
                 animationIndex++;
             }
         });
+
+        const btns = document.querySelectorAll('.nav-whatsapp-item');
+        const indexMap = { 'app': 1, 'juego': 2, 'archivo': 3, 'película': 4, 'herramienta': 5 };
+        if(indexMap[cat] !== undefined) {
+            updateNavIndicator(btns[indexMap[cat]]);
+        }
 
         if (found) {
             resultsContainer.style.display = 'block';
