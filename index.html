@@ -719,7 +719,7 @@
             cursor: pointer;
             font-size: 11px;
             font-weight: 500;
-            width: 20%;
+            flex: 1; /* Permite que todos los botones se adapten al espacio disponible */
         }
 
         .nav-whatsapp-item svg {
@@ -912,6 +912,11 @@
         <svg viewBox="0 0 24 24"><path d="M2 22h20V7H2v15zM2 7l4-4h3l-4 4M9 7l4-4h3l-4 4M16 7l4-4h2l-4 4" stroke-linejoin="round"/></svg>
         <span>películas</span>
     </button>
+    <!-- Nueva sección de Herramientas añadida -->
+    <button class="nav-whatsapp-item" onclick="filterByCategory('herramienta')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <span>herramientas</span>
+    </button>
 </div>
 
 <script>
@@ -1056,7 +1061,7 @@
         {
             id: 'HBO max',
             title: 'HBOMax: pro',
-            keys: ['hbo', 'HBO max', 'max'],
+            keys: ['hbo', 'hbo max', 'max'],
             link: 'https://www.mediafire.com/file/22fxato4dp3q7wd/HBOMax++Mod+By+iking+15+06+2026+re-upload.apk/file',
             isImage: true,
             bgValue: 'linear-gradient(135deg, #000000, #4F4F4F)',
@@ -1071,7 +1076,7 @@
         {
             id: 'shadow-fight-2-mod',
             title: 'shadow fight 2 mod',
-            keys: ['shadow fight 2', 'shadow fight 2', 'shadow', 'ninja'],
+            keys: ['shadow fight 2', 'shadow', 'ninja'],
             link: 'https://www.mediafire.com/file/cq7bzqjjnvwa1mb/shadow-fight-2-mod_2.45.0-an1.com.apk/file',
             isImage: true,
             bgValue: 'linear-gradient(135deg, #41992B, #6D6D6D)',
@@ -1086,7 +1091,7 @@
         {
             id: 'AZ Screen Recorder',
             title: 'AZ Screen Recorder',
-            keys: ['Grabadora', 'Grabadora de pantalla', 'Az screen', 'AZ screen recorder'],
+            keys: ['grabadora', 'grabadora de pantalla', 'az screen', 'az screen recorder', 'az'],
             link: 'https://www.mediafire.com/file/7cr0ngjcih3onep/AZ_Screen_Recorder_v6.9.4_%2528Premium%2529.apk/file',
             isImage: false,
             bgValue: '#FF6100',
@@ -1096,7 +1101,7 @@
             fileName: 'AZ_Screen_Recorder_v6.9.4',
             version: '6.9.4',
             size: '82.78 MB',
-            category: 'app'
+            category: 'herramienta'
         },
     ];
 
@@ -1193,7 +1198,8 @@
         let animationIndex = 0;
 
         APPS_DATA.forEach(app => {
-            if (app.keys.some(k => value.includes(k))) {
+            // Se mejoró la lógica de búsqueda para que valide mejor los resultados parciales
+            if (app.keys.some(k => k.toLowerCase().includes(value) || value.includes(k.toLowerCase()))) {
                 const styleValue = app.isImage ? `background-image: ${app.bgValue};` : `background-color: ${app.bgValue};`;
                 const tagBadge = calculateCardBadge(app.etiqueta);
                 
@@ -1222,7 +1228,7 @@
         });
 
         MOVIES_DATA.forEach(movie => {
-            if (movie.keys.some(k => value.includes(k))) {
+            if (movie.keys.some(k => k.toLowerCase().includes(value) || value.includes(k.toLowerCase()))) {
                 const styleValue = movie.isImage ? `background-image: ${movie.bgValue};` : `background-color: ${movie.bgValue};`;
                 const tagBadge = calculateCardBadge(movie.etiqueta);
                 
