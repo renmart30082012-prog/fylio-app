@@ -4,14 +4,16 @@
     <script defer src="https://cloud.umami.is/script.js" data-website-id="0427147e-a032-4fca-82ee-4af33ca00651"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fylio | Descarga APK Y Más</title>
+    <title>Descarga APK Y Más</title>
     <link class="favicon" rel="icon" href="favicon-claro.png" media="(prefers-color-scheme: light)">
     <link class="favicon" rel="icon" href="favicon-oscuro.png" media="(prefers-color-scheme: dark)">
     <link rel="stylesheet" href="styles.css">
-    <meta property="og:title" content="fylio | Descarga APK">
+    <meta property="og:title" content="Descarga APK Y Más">
     <meta property="og:description" content="Busca Menos, Encuentra Más">
     <meta property="og:image" content="https://fylio-app.vercel.app/favicon-claro.png">
     <meta property="og:url" content="https://fylio-app.vercel.app/">
+    <meta property="og:site_name" content="Fylio descargas">
+    <meta name="application-name" content="Fylio descargas">
     <meta property="fb:app_id" content="TU_ID_AQUÍ">
     <meta property="og:type" content="website">
     <style>
@@ -28,9 +30,10 @@
             --float-icon-color: #a0a0a0;
             --nav-bg: #ffffff;
             --nav-icon-color: #000000;
+            --nav-indicator-bg: rgba(0, 0, 0, 0.08);
         }
 
-        /* Barra de progreso de carga inicial de la página */
+        /* Barra de progreso de carga inicial */
         .page-loader {
             position: fixed;
             top: 0;
@@ -81,7 +84,7 @@
             opacity: 0.8;
         }
 
-        /* Iconos de fondo con movimientos suaves */
+        /* Iconos de fondo flotantes */
         .floating-icons-container {
             position: absolute;
             top: 0;
@@ -119,6 +122,7 @@
                 --float-icon-color: #b0b3b8;
                 --nav-bg: #161920;
                 --nav-icon-color: #ffffff;
+                --nav-indicator-bg: rgba(255, 255, 255, 0.15);
             }
             .animated-background {
                 background-color: #0d0f14;
@@ -152,14 +156,13 @@
             100% { transform: translate3d(2vw, 3vh, 0) scale(1.02) rotate(-90deg); }
         }
 
-        /* Estilos Globales */
         * {
             box-sizing: border-box;
             font-family: 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 0;
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-            -webkit-tap-highlight-color: transparent; /* ELIMINA EL EFECTO AZUL AL TOCAR EN MÓVILES */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -169,7 +172,6 @@
             overflow-x: hidden;
         }
 
-        /* Header Reestructurado */
         header {
             align-items: center;
             background: rgba(255, 255, 255, 0.4); 
@@ -223,7 +225,7 @@
             width: 22px;
         }
 
-        /* Nueva barra de búsqueda completa abajo */
+        /* Barra de búsqueda completa */
         .search-container-full {
             position: relative;
             display: flex;
@@ -259,17 +261,16 @@
             pointer-events: none;
         }
 
-        /* La lupa solo aparece al escribir algo */
         .search-container-full input:not(:placeholder-shown) + svg {
             opacity: 1;
             pointer-events: auto;
         }
 
-        /* Estilos del Historial de Búsquedas Recientes MODIFICADO A TU GUSTO */
+        /* Historial de Búsquedas Recientes */
         .recent-searches-container {
             display: none;
-            background: rgba(128, 128, 128, 0.08); /* Mismo color de la barra de búsqueda */
-            backdrop-filter: blur(10px); /* Mismo efecto de cristal */
+            background: rgba(128, 128, 128, 0.08);
+            backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--btn-border);
             border-radius: 20px;
@@ -323,11 +324,10 @@
             stroke: var(--float-icon-color);
         }
 
-        /* Contenido Principal */
         main {
             margin: 0 auto;
             max-width: 500px;
-            padding: 40px 20px 100px; /* Margen inferior para no tapar con la barra de WhatsApp */
+            padding: 40px 20px 100px;
             text-align: center;
         }
 
@@ -337,7 +337,80 @@
             opacity: 0.8;
         }
 
-        /* Modales / Overlays */
+        /* NUEVO DISEÑO: Menú Lateral Deslizable desde la Izquierda (Drawer) */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            display: none;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-drawer {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: var(--modal-bg);
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+            z-index: 2001;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+            transition: left 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+        }
+
+        .drawer-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .side-btn {
+            align-items: center;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            font-weight: 500;
+            gap: 14px;
+            margin-bottom: 8px;
+            padding: 12px 16px;
+            text-align: left;
+            transition: background 0.2s;
+            width: 100%;
+            font-size: 0.95rem;
+        }
+
+        .side-btn:hover { background: rgba(128, 128, 128, 0.08); }
+
+        .side-btn svg {
+            fill: none;
+            height: 20px;
+            stroke: var(--svg-color);
+            stroke-width: 2;
+            width: 20px;
+        }
+
+        /* Modales de Información y Novedades */
         .overlay {
             align-items: center;
             backdrop-filter: blur(2px);
@@ -349,15 +422,16 @@
             position: fixed;
             top: 0;
             width: 100%;
-            z-index: 1000;
+            z-index: 2000;
         }
 
         .modal-box {
             background: var(--modal-bg);
-            border-radius: 12px;
+            border-radius: 16px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.15);
             padding: 24px;
             width: 320px;
+            max-width: 90%;
         }
 
         .modal-box h3 {
@@ -366,35 +440,7 @@
             margin-bottom: 16px;
         }
 
-        /* Elementos del menú lateral */
-        .side-btn {
-            align-items: center;
-            background: var(--modal-bg);
-            border: 1px solid var(--btn-border);
-            border-radius: 50px;
-            color: var(--text-color);
-            cursor: pointer;
-            display: flex;
-            font-weight: 500;
-            gap: 10px;
-            margin-bottom: 6px;
-            padding: 12px;
-            text-align: left;
-            transition: all 0.2s;
-            width: 100%;
-        }
-
-        .side-btn:hover { background: rgba(128,128,128,0.1); }
-
-        .side-btn svg {
-            fill: none;
-            height: 18px;
-            stroke: var(--svg-color);
-            stroke-width: 2;
-            width: 18px;
-        }
-
-        /* Resultados de búsqueda con entrada animada y suavizada */
+        /* Resultados de búsqueda */
         #search-results {
             display: none;
             margin-top: 32px;
@@ -425,7 +471,6 @@
             }
         }
 
-        /* Animación suave al pasar el cursor o tocar (Dispositivos móviles) */
         .result-item:hover {
             border-color: var(--primary);
             box-shadow: 0 10px 20px rgba(0,0,0,0.12);
@@ -436,7 +481,6 @@
             transform: translateY(-1px) scale(0.99);
         }
 
-        /* Etiquetas/Badges Inteligentes */
         .card-badge {
             position: absolute;
             top: 10px;
@@ -454,7 +498,6 @@
         .badge-nuevo { background-color: var(--success); }
         .badge-actualizado { background-color: #f39c12; }
 
-        /* Información técnica integrada del archivo */
         .file-info-tags {
             display: flex;
             justify-content: center;
@@ -472,7 +515,6 @@
             opacity: 0.75;
         }
 
-        /* Botón de Compartir Integrado en Tarjeta */
         .card-actions {
             display: flex;
             justify-content: flex-end;
@@ -510,7 +552,6 @@
             stroke-width: 2;
         }
 
-        /* Notificación Toast Persistente para portapapeles */
         .toast-notification {
             position: fixed;
             bottom: 90px;
@@ -594,7 +635,6 @@
             opacity: 0.75;
         }
 
-        /* Contenedor Circular Loader */
         .circular-loader-container {
             position: relative;
             width: 100px;
@@ -660,7 +700,6 @@
             display: none;
         }
 
-        /* Botón de descarga final */
         .download-btn {
             align-items: center;
             background: var(--modal-bg);
@@ -696,91 +735,42 @@
             width: 18px;
         }
 
-        /* Soporte */
-        .support-progress-container {
-            background: var(--btn-border);
-            border-radius: 4px;
-            height: 8px;
-            margin: 20px 0;
-            overflow: hidden;
-            width: 100%;
-        }
-
-        .support-progress-fill {
-            background: linear-gradient(90deg, var(--primary), #4d9fff);
-            border-radius: 4px;
-            height: 100%;
-            transition: width 0.05s linear;
-            width: 0%;
-        }
-
-        .support-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .btn-cancel-support {
-            background: var(--modal-bg);
-            border: 1px solid var(--btn-border);
-            border-radius: 50px;
-            color: var(--text-color);
-            cursor: pointer;
-            flex: 1;
-            font-weight: 500;
-            padding: 10px;
-            transition: background 0.2s;
-        }
-
-        .btn-cancel-support:hover { background: rgba(128,128,128,0.1); }
-
-        /* Botón de retroceso */
-        #back-button {
-            align-items: center;
-            background: var(--primary);
-            border: none;
-            border-radius: 50%;
-            bottom: 90px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            color: white;
-            cursor: pointer;
-            display: none;
-            height: 50px;
-            justify-content: center;
-            position: fixed;
-            right: 20px;
-            width: 50px;
-            z-index: 9998;
-        }
-
-        /* Barra de navegación inferior estilo WhatsApp */
+        /* Barra de navegación inferior flotante */
         .bottom-nav-whatsapp {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: var(--nav-bg);
-            border-top: 1px solid var(--btn-border);
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 40px;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 8px 0;
-            z-index: 9999;
-            box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
-            touch-action: none; /* Esto permite deslizar la barra limpiamente sin scroll en móvil */
+            padding: 6px 8px;
+            z-index: 999;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            touch-action: none; 
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .bottom-nav-whatsapp {
+                background: rgba(22, 25, 32, 0.85); 
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
         }
 
-        /* Estilos de la burbuja animada (Liquid Glass) - MODIFICADA ALARGADA */
         .nav-indicator {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            height: 85%; /* Más alta y rellenando más espacio */
-            background: rgba(128, 128, 128, 0.08);
-            border: 1px solid var(--btn-border);
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            height: calc(100% - 12px);
+            background: var(--nav-indicator-bg);
+            border-radius: 30px;
             z-index: 0;
             transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1), width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             pointer-events: none;
@@ -794,21 +784,28 @@
             border: none;
             color: var(--text-color);
             cursor: pointer;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             flex: 1;
             position: relative;
             z-index: 1;
-            padding: 4px 0;
+            padding: 6px 0;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-whatsapp-item[data-active="true"] {
+            opacity: 1;
         }
 
         .nav-whatsapp-item svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--nav-icon-color);
+            width: 22px;
+            height: 22px;
+            stroke: var(--text-color);
             fill: none;
             stroke-width: 2;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
+            transition: stroke 0.3s ease;
         }
     </style>
 </head>
@@ -817,28 +814,22 @@
 <div id="page-loader" class="page-loader"></div>
 
 <div class="animated-background">
-    <!-- Iconos de fondo con diseño simple y posicionamiento aleatorio alterado -->
     <div class="floating-icons-container">
-        <!-- Mando de consola -->
         <svg class="floating-icon" style="top: 15%; left: 10%; animation-delay: 0s; animation-duration: 14s;" viewBox="0 0 24 24"><path d="M6 9h12a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-3a3 3 0 0 1 3-3z" stroke="currentColor" stroke-width="1.5"/></svg>
         <svg class="floating-icon" style="top: 65%; left: 75%; animation-delay: -3s; animation-duration: 18s;" viewBox="0 0 24 24"><path d="M6 9h12a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-3a3 3 0 0 1 3-3z" stroke="currentColor" stroke-width="1.5"/></svg>
-        <!-- Carpeta -->
         <svg class="floating-icon" style="top: 25%; left: 80%; animation-delay: -1s; animation-duration: 16s;" viewBox="0 0 24 24"><path d="M2 6a2 2 0 0 1 2-2h4l2 2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z" stroke="currentColor" stroke-width="1.5"/></svg>
         <svg class="floating-icon" style="top: 80%; left: 20%; animation-delay: -5s; animation-duration: 15s;" viewBox="0 0 24 24"><path d="M2 6a2 2 0 0 1 2-2h4l2 2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z" stroke="currentColor" stroke-width="1.5"/></svg>
-        <!-- Cuatro cuadrados -->
         <svg class="floating-icon" style="top: 45%; left: 15%; animation-delay: -2s; animation-duration: 12s;" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="15" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="15" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
         <svg class="floating-icon" style="top: 10%; left: 50%; animation-delay: -7s; animation-duration: 20s;" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="15" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="15" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
-        <!-- Claqueta -->
         <svg class="floating-icon" style="top: 50%; left: 85%; animation-delay: -4s; animation-duration: 19s;" viewBox="0 0 24 24"><path d="M3 5h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM3 9h18" stroke="currentColor" stroke-width="1.5"/></svg>
         <svg class="floating-icon" style="top: 85%; left: 55%; animation-delay: -6s; animation-duration: 13s;" viewBox="0 0 24 24"><path d="M3 5h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM3 9h18" stroke="currentColor" stroke-width="1.5"/></svg>
-        <!-- Cabeza de Android -->
         <svg class="floating-icon" style="top: 35%; left: 45%; animation-delay: -3.5s; animation-duration: 17s;" viewBox="0 0 24 24"><path d="M6 14a6 6 0 0 1 12 0H6zm3-4l-1-2m7 2l1-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         <svg class="floating-icon" style="top: 70%; left: 5%; animation-delay: -1.5s; animation-duration: 14s;" viewBox="0 0 24 24"><path d="M6 14a6 6 0 0 1 12 0H6zm3-4l-1-2m7 2l1-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
     </div>
 </div>
 
 <header>
-    <button class="icon-btn" onclick="toggleModal('side-menu')">
+    <button class="icon-btn" onclick="toggleDrawer()">
         <svg viewBox="0 0 24 24">
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -846,7 +837,6 @@
         </svg>
     </button>
     <div class="brand-container">
-        <!-- Espacio listo para colocar el logo con imagen -->
         <img src="logo.png" alt="" class="brand-logo" onerror="this.style.display='none'">
         <span class="brand-name">Fylio</span>
     </div>
@@ -858,7 +848,6 @@
         <p class="intro-text">Estamos iniciando pero poco a poco añadiremos más apps y archivos para ti</p>
     </div>
 
-    <!-- Barra de búsqueda reposicionada abajo completa y con lupa inteligente -->
     <div class="search-container-full">
         <input type="text" id="search-input" placeholder="Buscar..." onkeypress="handleSearchKey(event)" onfocus="showRecents()" onblur="hideRecentsDelayed()">
         <svg viewBox="0 0 24 24" onclick="performSearch()">
@@ -867,7 +856,6 @@
         </svg>
     </div>
 
-    <!-- Sección de Buscado Recientemente -->
     <div id="recent-searches" class="recent-searches-container">
         <div class="recent-header">
             <span>Buscado recientemente</span>
@@ -879,23 +867,16 @@
     <div id="search-results"></div>
 </main>
 
-<div id="side-menu" class="overlay" onclick="resetToHome()">
-    <div class="modal-box" id="side-menu-content" style="width: 250px;" onclick="event.stopPropagation()">
-        <button class="side-btn" onclick="showSupportLoading()">
-            <svg viewBox="0 0 24 24">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            Soporte
+<!-- Menú lateral izquierdo deslizable tipo Drawer -->
+<div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+<div id="side-drawer" class="side-drawer">
+    <div class="drawer-header">
+        <span class="drawer-title">Menú</span>
+        <button class="icon-btn" onclick="closeDrawer()">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-        <button class="side-btn" onclick="mostrarNovedades()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
-                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-            </svg>
-            Novedades
-        </button>
+    </div>
+    <div id="side-menu-content">
         <button class="side-btn" onclick="location.reload()">
             <svg viewBox="0 0 24 24">
                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
@@ -929,25 +910,6 @@
     </div>
 </div>
 
-<div id="novedades-modal" class="overlay" onclick="closeNovedades()">
-    <div class="modal-box" onclick="event.stopPropagation()">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="margin: 0;">Novedades de la Web</h3>
-            <button onclick="closeNovedades()" style="background: none; border: none; cursor: pointer; font-size: 20px; color: var(--text-color);">✕</button>
-        </div>
-        <div style="font-size: 0.95rem; line-height: 1.6; opacity: 0.8; text-align: left;">
-            <p style="font-weight: 600; color: var(--primary); margin-bottom: 10px;">Versión de la Web: v2.1.0</p>
-            <ul style="margin-left: 20px; margin-bottom: 15px;">
-                <li><strong>Barra de Búsqueda Integrada:</strong> Ahora la barra de búsqueda es visible directamente en la pantalla principal para un acceso más rápido.</li>
-                <li><strong>Nueva Navegación Inferior (Estilo WhatsApp):</strong> Se ha implementado una barra de navegación fija en la parte inferior con acceso directo a: Inicio, Apps, Juegos, Archivos y Películas. </li>
-                <li><strong>Tema Oscuro Inteligente:</strong> Colores adaptados automáticamente al sistema.</li>
-                <li><strong>Fondo Dinámico:</strong> Se han añadido elementos visuales flotantes que mejoran la estética de la interfaz. </li>
-                <li><strong>Optimización del Header:</strong> El encabezado ha sido simplificado para centrar la atención en la funcionalidad de búsqueda y navegación. </li>
-            </ul>
-        </div>
-    </div>
-</div>
-
 <div id="loading-screen">
     <div id="loading-image" class="loading-image"></div>
     <h3 id="loading-title" class="loading-title"></h3>
@@ -971,58 +933,53 @@
     </button>
 </div>
 
-<button id="back-button" onclick="resetToHome()">
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
-        <path d="M19 12H5M12 19l-7-7 7-7"/>
-    </svg>
-</button>
-
 <div id="toast-notification" class="toast-notification">¡Enlace de la app copiado!</div>
 
-<!-- Barra de navegación inferior detallada estilo WhatsApp -->
+<!-- Barra de navegación inferior -->
 <div class="bottom-nav-whatsapp">
-    <div id="nav-indicator" class="nav-indicator"></div> <!-- El coso deslizable -->
+    <div id="nav-indicator" class="nav-indicator"></div>
     
-    <button class="nav-whatsapp-item" onclick="resetToHome()">
+    <button class="nav-whatsapp-item" onclick="navigateToSection('home', '')">
         <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
         <span>inicio</span>
     </button>
-    <button class="nav-whatsapp-item" onclick="filterByCategory('app')">
+    <button class="nav-whatsapp-item" onclick="navigateToSection('category', 'app')">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" ry="4"/></svg>
         <span>app</span>
     </button>
-    <button class="nav-whatsapp-item" onclick="filterByCategory('juego')">
+    <button class="nav-whatsapp-item" onclick="navigateToSection('category', 'juego')">
         <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 12h4M8 10v4M16 11h.01M18 13h.01" stroke-linecap="round"/></svg>
         <span>juegos</span>
     </button>
-    <button class="nav-whatsapp-item" onclick="filterByCategory('archivo')">
+    <button class="nav-whatsapp-item" onclick="navigateToSection('category', 'archivo')">
         <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
         <span>archivos</span>
     </button>
-    <button class="nav-whatsapp-item" onclick="filterByCategory('película')">
+    <button class="nav-whatsapp-item" onclick="navigateToSection('category', 'película')">
         <svg viewBox="0 0 24 24"><path d="M2 22h20V7H2v15zM2 7l4-4h3l-4 4M9 7l4-4h3l-4 4M16 7l4-4h2l-4 4" stroke-linejoin="round"/></svg>
         <span>películas</span>
     </button>
-    <button class="nav-whatsapp-item" onclick="filterByCategory('herramienta')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    <button class="nav-whatsapp-item" onclick="navigateToSection('category', 'herramienta')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         <span>herramientas</span>
     </button>
 </div>
 
 <script>
-    // Control de la barra de progreso inicial de carga de página y lógica táctil
+    // Configuración inicial del historial y estados de la SPA
+    window.history.replaceState({ view: 'home' }, '');
+
     window.addEventListener('DOMContentLoaded', () => {
         const pLoader = document.getElementById('page-loader');
         pLoader.style.width = '40%';
         setTimeout(() => { pLoader.style.width = '75%'; }, 150);
         
-        // Inicializar posición de burbuja deslizable en "inicio"
         setTimeout(() => {
             const btns = document.querySelectorAll('.nav-whatsapp-item');
             if(btns.length > 0) updateNavIndicator(btns[0]);
         }, 100);
 
-        // --- INICIO DE LA LÓGICA DE DESLIZAMIENTO TÁCTIL ---
+        // Control deslizante táctil de la barra inferior
         const navContainer = document.querySelector('.bottom-nav-whatsapp');
         const indicator = document.getElementById('nav-indicator');
         let isDraggingIndicator = false;
@@ -1036,55 +993,39 @@
 
             navContainer.addEventListener('touchmove', (e) => {
                 const touchX = e.touches[0].clientX;
-                
-                // Si mueve el dedo una distancia razonable (arrastre intencional)
                 if (Math.abs(touchX - startX) > 8) { 
                     isDraggingIndicator = true;
-                    indicator.style.transition = 'none'; // Sigue el dedo de inmediato
-                    
+                    indicator.style.transition = 'none';
                     const navRect = navContainer.getBoundingClientRect();
                     let newLeft = touchX - navRect.left - (indicator.offsetWidth / 2);
-                    
-                    // Límites de los bordes
                     if (newLeft < 0) newLeft = 0;
                     if (newLeft > navRect.width - indicator.offsetWidth) newLeft = navRect.width - indicator.offsetWidth;
-                    
                     indicator.style.left = `${newLeft}px`;
                 }
             }, { passive: true });
 
-            navContainer.addEventListener('touchend', (e) => {
-                // Restaurar la animación fluida
+            navContainer.addEventListener('touchend', () => {
                 indicator.style.transition = 'left 0.4s cubic-bezier(0.25, 1, 0.5, 1), width 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-                
                 if (isDraggingIndicator) {
                     const navBtns = Array.from(document.querySelectorAll('.nav-whatsapp-item'));
                     const navRect = navContainer.getBoundingClientRect();
                     const indicatorCenter = parseFloat(indicator.style.left) + (indicator.offsetWidth / 2);
-                    
                     let closestBtn = navBtns[0];
                     let minDistance = Infinity;
                     
-                    // Calcular matemáticamente en qué botón cayó el dedo al soltar
                     navBtns.forEach(btn => {
                         const btnRect = btn.getBoundingClientRect();
                         const btnCenter = btnRect.left - navRect.left + (btnRect.width / 2);
                         const distance = Math.abs(indicatorCenter - btnCenter);
-                        
                         if (distance < minDistance) {
                             minDistance = distance;
                             closestBtn = btn;
                         }
                     });
-                    
-                    if (closestBtn) {
-                        // Simular el toque en la sección calculada
-                        closestBtn.click(); 
-                    }
+                    if (closestBtn) closestBtn.click(); 
                 }
             });
         }
-        // --- FIN DE LA LÓGICA DE DESLIZAMIENTO TÁCTIL ---
     });
 
     window.addEventListener('load', () => {
@@ -1096,13 +1037,36 @@
         }, 300);
     });
 
-    // Ajustar burbuja al redimensionar ventana
     window.addEventListener('resize', () => {
         const activeBtn = document.querySelector('.nav-whatsapp-item[data-active="true"]') || document.querySelectorAll('.nav-whatsapp-item')[0];
         updateNavIndicator(activeBtn);
     });
 
-    // Función para actualizar posición de la burbuja animada (Modificada a 95% de ancho para ser alargada)
+    // Manejador del botón "Atrás" físico/gesto del celular de forma nativa
+    window.addEventListener('popstate', (event) => {
+        closeDrawer();
+        closeInfo();
+        
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen.style.display === 'flex') {
+            loadingScreen.style.display = 'none';
+            if (window.loadingInterval) clearInterval(window.loadingInterval);
+        }
+
+        if (event.state) {
+            if (event.state.view === 'category') {
+                executeCategoryFilter(event.state.category, false);
+            } else if (event.state.view === 'search') {
+                document.getElementById('search-input').value = event.state.term;
+                executeSearch(event.state.term, false);
+            } else {
+                executeResetToHome(false);
+            }
+        } else {
+            executeResetToHome(false);
+        }
+    });
+
     function updateNavIndicator(btn) {
         const indicator = document.getElementById('nav-indicator');
         const nav = document.querySelector('.bottom-nav-whatsapp');
@@ -1114,19 +1078,18 @@
         const navRect = nav.getBoundingClientRect();
         const btnRect = btn.getBoundingClientRect();
         
-        // El ancho es ahora el 95% del botón, haciéndolo rectangular con esquinas curvas
-        indicator.style.width = `${btnRect.width * 0.95}px`;
-        indicator.style.left = `${btnRect.left - navRect.left + (btnRect.width * 0.025)}px`;
+        indicator.style.width = `${btnRect.width}px`;
+        indicator.style.left = `${btnRect.left - navRect.left}px`;
     }
 
-    // Lógica para historial de búsquedas recientes
+    // Historial de Búsquedas Recientes
     let recentSearches = JSON.parse(localStorage.getItem('fylio_recents')) || [];
 
     function saveSearch(term) {
         if(!term) return;
         recentSearches = recentSearches.filter(t => t.toLowerCase() !== term.toLowerCase());
         recentSearches.unshift(term);
-        if(recentSearches.length > 5) recentSearches.pop(); // Limitar a 5
+        if(recentSearches.length > 5) recentSearches.pop();
         localStorage.setItem('fylio_recents', JSON.stringify(recentSearches));
     }
 
@@ -1355,8 +1318,6 @@
         }
     ];
 
-    const sideMenuContent = document.getElementById('side-menu-content').innerHTML;
-
     function calculateCardBadge(etiqueta) {
         if (etiqueta === 'nuevo') {
             return `<span class="card-badge badge-nuevo">Nuevo</span>`;
@@ -1383,30 +1344,55 @@
         }
     }
 
-    function resetToHome() {
-        if (window.supportInterval) cancelSupport();
-        
-        ['side-menu', 'loading-screen', 'info-modal', 'novedades-modal'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.style.display = 'none';
-        });
+    // Funciones del Menú Drawer Izquierdo
+    function toggleDrawer() {
+        const drawer = document.getElementById('side-drawer');
+        const overlay = document.getElementById('drawer-overlay');
+        overlay.style.display = 'block';
+        setTimeout(() => {
+            overlay.style.opacity = '1';
+            drawer.style.left = '0';
+        }, 10);
+    }
+
+    function closeDrawer() {
+        const drawer = document.getElementById('side-drawer');
+        const overlay = document.getElementById('drawer-overlay');
+        drawer.style.left = '-280px';
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300);
+    }
+
+    // Métodos de Navegación con Historial Nativo
+    function navigateToSection(type, value) {
+        closeDrawer();
+        if (type === 'home') {
+            window.history.pushState({ view: 'home' }, '');
+            executeResetToHome(true);
+        } else if (type === 'category') {
+            window.history.pushState({ view: 'category', category: value }, '');
+            executeCategoryFilter(value, true);
+        } else if (type === 'search') {
+            window.history.pushState({ view: 'search', term: value }, '');
+            executeSearch(value, true);
+        }
+    }
+
+    function executeResetToHome(scrollUp) {
+        const el = document.getElementById('info-modal');
+        if (el) el.style.display = 'none';
 
         document.getElementById('search-results').style.display = 'none';
         document.getElementById('welcome-text').style.display = 'block';
-        document.getElementById('back-button').style.display = 'none';
         document.getElementById('search-input').value = ''; 
 
         if (window.loadingInterval) clearInterval(window.loadingInterval);
 
-        // Mover burbuja al inicio
         const btns = document.querySelectorAll('.nav-whatsapp-item');
         if(btns.length > 0) updateNavIndicator(btns[0]);
-    }
-
-    function toggleModal(id) { 
-        document.getElementById(id).style.display = 'flex';
-        document.getElementById('welcome-text').style.display = 'none';
-        document.getElementById('back-button').style.display = 'flex';
+        if(scrollUp) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function handleSearchKey(event) {
@@ -1418,19 +1404,21 @@
     function performSearch() {
         const input = document.getElementById('search-input');
         const value = input.value.trim().toLowerCase();
+        if (!value) {
+            navigateToSection('home', '');
+            return;
+        }
+        saveSearch(input.value.trim());
+        navigateToSection('search', value);
+    }
+
+    function executeSearch(value, scrollUp) {
         const resultsContainer = document.getElementById('search-results');
         const welcomeText = document.getElementById('welcome-text');
 
         resultsContainer.innerHTML = ''; 
         resultsContainer.style.display = 'none';
-        input.blur(); 
-
-        if (!value) {
-            resetToHome();
-            return;
-        }
-
-        saveSearch(input.value.trim());
+        document.getElementById('search-input').blur(); 
 
         welcomeText.style.display = 'none'; 
         let found = false;
@@ -1491,15 +1479,14 @@
         
         if (found) { 
             resultsContainer.style.display = 'block'; 
-            document.getElementById('back-button').style.display = 'flex';
         } else {
             welcomeText.style.display = 'block';
             welcomeText.innerHTML = `<h1>Sin resultados</h1><p class="intro-text">No encontramos nada para "${value}". Intenta otra búsqueda.</p>`;
-            document.getElementById('back-button').style.display = 'flex';
         }
+        if(scrollUp) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function filterByCategory(cat) {
+    function executeCategoryFilter(cat, scrollUp) {
         const resultsContainer = document.getElementById('search-results');
         const welcomeText = document.getElementById('welcome-text');
         
@@ -1557,18 +1544,20 @@
 
         if (found) {
             resultsContainer.style.display = 'block';
-            document.getElementById('back-button').style.display = 'flex';
         } else {
             resultsContainer.style.display = 'block';
             resultsContainer.innerHTML = `<h1>Sin contenido</h1><p class="intro-text">Por el momento no hay elementos cargados en esta sección.</p>`;
-            document.getElementById('back-button').style.display = 'flex';
         }
+        if(scrollUp) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     const PLAY_CIRCLE_ICON = `<svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16" fill="currentColor"></polygon></svg>`;
     const LOCK_ICON = `<svg id="lock-icon" class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`;
 
     function startLoading(id, type) {
+        // Añadir estado al historial para que el botón atrás cierre la pantalla de descarga
+        window.history.pushState({ view: 'loading' }, '');
+
         const screen = document.getElementById('loading-screen'), 
               img = document.getElementById('loading-image'), 
               title = document.getElementById('loading-title'), 
@@ -1613,7 +1602,6 @@
         countdownText.textContent = timeLeft;
         
         screen.style.display = 'block';
-        document.getElementById('back-button').style.display = 'none';
 
         if (window.loadingInterval) clearInterval(window.loadingInterval);
 
@@ -1639,47 +1627,18 @@
                 btn.classList.add('active'); 
                 btn.disabled = false; 
                 btn.onclick = () => window.location.href = btn.dataset.link;
-                document.getElementById('back-button').style.display = 'flex';
             }
         }, 1000);
     }
 
-    function showSupportLoading() {
-        const container = document.getElementById('side-menu-content');
-        container.innerHTML = `<h3>Conectando con soporte</h3><div class="support-progress-container"><div class="support-progress-fill" id="support-progress"></div></div><div class="support-buttons"><button class="btn-cancel-support" onclick="cancelSupport()">Cancelar</button></div>`;
-        let p = 0;
-        window.supportInterval = setInterval(() => { 
-            p += 1; 
-            document.getElementById('support-progress').style.width = p + '%'; 
-            if (p >= 100) { 
-                clearInterval(window.supportInterval); 
-                window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSeGLNXRmEDBmt9uCS8Zi_j2UCFEcvsqsBvrJLfOMjC5ABqF5A/viewform?usp=dialog"; 
-            } 
-        }, 40);
-    }
-
-    function cancelSupport() {
-        clearInterval(window.supportInterval);
-        document.getElementById('side-menu-content').innerHTML = sideMenuContent;
-        resetToHome();
-    }
-    
     function mostrarInformacion() {
-        resetToHome(); 
+        closeDrawer();
+        window.history.pushState({ view: 'info' }, '');
         document.getElementById('info-modal').style.display = 'flex';
     }
 
     function closeInfo() {
         document.getElementById('info-modal').style.display = 'none';
-    }
-
-    function mostrarNovedades() {
-        resetToHome();
-        document.getElementById('novedades-modal').style.display = 'flex';
-    }
-
-    function closeNovedades() {
-        document.getElementById('novedades-modal').style.display = 'none';
     }
 </script>
 
