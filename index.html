@@ -31,9 +31,9 @@
             --nav-bg: #ffffff;
             --nav-icon-color: #000000;
             --nav-indicator-bg: rgba(0, 0, 0, 0.08);
+            --btn-inset-color: rgba(0, 0, 0, 0.4); /* Borde negro desaturado para tema claro */
         }
 
-        /* Barra de progreso de carga inicial */
         .page-loader {
             position: fixed;
             top: 0;
@@ -45,7 +45,6 @@
             transition: width 0.4s ease, opacity 0.3s ease;
         }
 
-        /* Fondo Animado Líquido Optimizado (60 FPS) */
         .animated-background {
             position: fixed;
             top: 0;
@@ -84,7 +83,6 @@
             opacity: 0.8;
         }
 
-        /* Iconos de fondo flotantes */
         .floating-icons-container {
             position: absolute;
             top: 0;
@@ -123,6 +121,7 @@
                 --nav-bg: #161920;
                 --nav-icon-color: #ffffff;
                 --nav-indicator-bg: rgba(255, 255, 255, 0.15);
+                --btn-inset-color: rgba(255, 255, 255, 0.4); /* Borde blanco desaturado para tema oscuro */
             }
             .animated-background {
                 background-color: #0d0f14;
@@ -225,7 +224,6 @@
             width: 22px;
         }
 
-        /* Barra de búsqueda completa */
         .search-container-full {
             position: relative;
             display: flex;
@@ -266,7 +264,6 @@
             pointer-events: auto;
         }
 
-        /* Historial de Búsquedas Recientes */
         .recent-searches-container {
             display: none;
             background: rgba(128, 128, 128, 0.08);
@@ -337,7 +334,6 @@
             opacity: 0.8;
         }
 
-        /* NUEVO DISEÑO: Menú Lateral Deslizable desde la Izquierda (Drawer) */
         .drawer-overlay {
             position: fixed;
             top: 0;
@@ -410,7 +406,6 @@
             width: 20px;
         }
 
-        /* Modales de Información y Novedades */
         .overlay {
             align-items: center;
             backdrop-filter: blur(2px);
@@ -440,7 +435,6 @@
             margin-bottom: 16px;
         }
 
-        /* Resultados de búsqueda */
         #search-results {
             display: none;
             margin-top: 32px;
@@ -594,19 +588,10 @@
             margin-bottom: 4px;
         }
 
-        /* Pantalla de Carga (Download) */
-        #loading-screen {
-            background: var(--bg-color);
+        /* Pantalla de Carga (Download View) */
+        #download-view {
             display: none;
-            height: 100%;
-            left: 0;
-            overflow-y: auto;
-            padding: 24px;
-            position: fixed;
-            text-align: center;
-            top: 0;
-            width: 100%;
-            z-index: 2000;
+            animation: fadeDown 0.3s ease;
         }
 
         .loading-image {
@@ -615,8 +600,8 @@
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             height: 160px;
-            margin: 24px auto;
-            max-width: 320px;
+            margin: 0 auto 24px;
+            max-width: 100%;
             width: 100%;
             align-items: center;
             justify-content: center;
@@ -626,20 +611,14 @@
         .loading-title {
             font-size: 22px;
             font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .loading-text {
-            font-size: 17px;
-            margin: 16px 0 28px;
-            opacity: 0.75;
+            margin-bottom: 24px;
         }
 
         .circular-loader-container {
             position: relative;
             width: 100px;
             height: 100px;
-            margin: 0 auto 24px;
+            margin: 24px auto;
         }
 
         .circular-loader-container svg {
@@ -706,25 +685,34 @@
             border: 1px solid var(--btn-border);
             border-radius: 50px;
             color: var(--text-color);
-            cursor: not-allowed;
+            cursor: pointer;
             display: flex;
             font-size: 16px;
             font-weight: 500;
             gap: 8px;
             justify-content: center;
-            margin: 12px auto 0;
+            margin: 0 auto;
             max-width: 200px;
-            opacity: 0.5;
             padding: 13px 28px;
             transition: all 0.3s;
             width: 100%;
+            position: relative;
+        }
+
+        .download-btn.inset-border {
+            /* Borde interno blanco o negro semitransparente según tema activo */
+            box-shadow: inset 0 0 0 2px var(--btn-inset-color);
+        }
+
+        .download-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
         }
 
         .download-btn.active {
             border-color: var(--primary);
             box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
-            cursor: pointer;
-            opacity: 1;
         }
 
         .lock-icon {
@@ -735,14 +723,13 @@
             width: 18px;
         }
 
-        /* Barra de navegación inferior flotante */
         .bottom-nav-whatsapp {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 92%;
-            max-width: 450px;
+            width: 85%;
+            max-width: 320px; /* Reducido para que la barra sea más corta */
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
@@ -815,16 +802,7 @@
 
 <div class="animated-background">
     <div class="floating-icons-container">
-        <svg class="floating-icon" style="top: 15%; left: 10%; animation-delay: 0s; animation-duration: 14s;" viewBox="0 0 24 24"><path d="M6 9h12a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-3a3 3 0 0 1 3-3z" stroke="currentColor" stroke-width="1.5"/></svg>
-        <svg class="floating-icon" style="top: 65%; left: 75%; animation-delay: -3s; animation-duration: 18s;" viewBox="0 0 24 24"><path d="M6 9h12a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-3a3 3 0 0 1 3-3z" stroke="currentColor" stroke-width="1.5"/></svg>
-        <svg class="floating-icon" style="top: 25%; left: 80%; animation-delay: -1s; animation-duration: 16s;" viewBox="0 0 24 24"><path d="M2 6a2 2 0 0 1 2-2h4l2 2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z" stroke="currentColor" stroke-width="1.5"/></svg>
-        <svg class="floating-icon" style="top: 80%; left: 20%; animation-delay: -5s; animation-duration: 15s;" viewBox="0 0 24 24"><path d="M2 6a2 2 0 0 1 2-2h4l2 2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6z" stroke="currentColor" stroke-width="1.5"/></svg>
-        <svg class="floating-icon" style="top: 45%; left: 15%; animation-delay: -2s; animation-duration: 12s;" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="15" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="15" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
-        <svg class="floating-icon" style="top: 10%; left: 50%; animation-delay: -7s; animation-duration: 20s;" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="3" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="15" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="15" y="15" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
-        <svg class="floating-icon" style="top: 50%; left: 85%; animation-delay: -4s; animation-duration: 19s;" viewBox="0 0 24 24"><path d="M3 5h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM3 9h18" stroke="currentColor" stroke-width="1.5"/></svg>
-        <svg class="floating-icon" style="top: 85%; left: 55%; animation-delay: -6s; animation-duration: 13s;" viewBox="0 0 24 24"><path d="M3 5h18a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM3 9h18" stroke="currentColor" stroke-width="1.5"/></svg>
-        <svg class="floating-icon" style="top: 35%; left: 45%; animation-delay: -3.5s; animation-duration: 17s;" viewBox="0 0 24 24"><path d="M6 14a6 6 0 0 1 12 0H6zm3-4l-1-2m7 2l1-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        <svg class="floating-icon" style="top: 70%; left: 5%; animation-delay: -1.5s; animation-duration: 14s;" viewBox="0 0 24 24"><path d="M6 14a6 6 0 0 1 12 0H6zm3-4l-1-2m7 2l1-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <!-- Contenedor de iconos -->
     </div>
 </div>
 
@@ -843,31 +821,60 @@
 </header>
 
 <main>
-    <div id="welcome-text">
-        <h1>Bienvenido</h1>
-        <p class="intro-text">Estamos iniciando pero poco a poco añadiremos más apps y archivos para ti</p>
-    </div>
-
-    <div class="search-container-full">
-        <input type="text" id="search-input" placeholder="Buscar..." onkeypress="handleSearchKey(event)" onfocus="showRecents()" onblur="hideRecentsDelayed()">
-        <svg viewBox="0 0 24 24" onclick="performSearch()">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-    </div>
-
-    <div id="recent-searches" class="recent-searches-container">
-        <div class="recent-header">
-            <span>Buscado recientemente</span>
-            <button onmousedown="clearRecents()">Borrar</button>
+    <!-- Vista Principal (Buscador, Resultados, Inicio) -->
+    <div id="main-view">
+        <div id="welcome-text">
+            <h1>Bienvenido</h1>
+            <p class="intro-text">Estamos iniciando pero poco a poco añadiremos más apps y archivos para ti</p>
         </div>
-        <div id="recent-list"></div>
+
+        <div class="search-container-full">
+            <input type="text" id="search-input" placeholder="Buscar..." onkeypress="handleSearchKey(event)" onfocus="showRecents()" onblur="hideRecentsDelayed()">
+            <svg viewBox="0 0 24 24" onclick="performSearch()">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+        </div>
+
+        <div id="recent-searches" class="recent-searches-container">
+            <div class="recent-header">
+                <span>Buscado recientemente</span>
+                <button onmousedown="clearRecents()">Borrar</button>
+            </div>
+            <div id="recent-list"></div>
+        </div>
+
+        <div id="search-results"></div>
     </div>
 
-    <div id="search-results"></div>
+    <!-- Vista de Descarga (Reemplaza la principal al entrar) -->
+    <div id="download-view">
+        <div id="dl-image" class="loading-image"></div>
+        <h3 id="dl-title" class="loading-title"></h3>
+        
+        <button id="download-btn" class="download-btn">Descargar</button>
+        
+        <div class="circular-loader-container" id="circular-loader" style="display:none;">
+            <svg>
+                <circle class="circle-bg" cx="50" cy="50" r="44"></circle>
+                <circle class="circle-progress" id="circle-progress" cx="50" cy="50" r="44"></circle>
+            </svg>
+            <div class="circle-content">
+                <span id="countdown-text">10</span>
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 6L9 17l-5-5"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Sección de recomendaciones -->
+        <div id="recommendations-container" style="display: none; margin-top: 50px; text-align: left;">
+            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">Recomendado para ti</h3>
+            <div id="recommendations-list"></div>
+        </div>
+    </div>
 </main>
 
-<!-- Menú lateral izquierdo deslizable tipo Drawer -->
 <div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer()"></div>
 <div id="side-drawer" class="side-drawer">
     <div class="drawer-header">
@@ -910,35 +917,10 @@
     </div>
 </div>
 
-<div id="loading-screen">
-    <div id="loading-image" class="loading-image"></div>
-    <h3 id="loading-title" class="loading-title"></h3>
-    <p class="loading-text">Preparando enlace...</p>
-    
-    <div class="circular-loader-container" id="circular-loader">
-        <svg>
-            <circle class="circle-bg" cx="50" cy="50" r="44"></circle>
-            <circle class="circle-progress" id="circle-progress" cx="50" cy="50" r="44"></circle>
-        </svg>
-        <div class="circle-content">
-            <span id="countdown-text">10</span>
-            <svg viewBox="0 0 24 24">
-                <path d="M20 6L9 17l-5-5"/>
-            </svg>
-        </div>
-    </div>
+<div id="toast-notification" class="toast-notification"></div>
 
-    <button id="download-btn" class="download-btn" disabled>
-        <span id="btn-text">Loading...</span>
-    </button>
-</div>
-
-<div id="toast-notification" class="toast-notification">¡Enlace de la app copiado!</div>
-
-<!-- Barra de navegación inferior -->
 <div class="bottom-nav-whatsapp">
     <div id="nav-indicator" class="nav-indicator"></div>
-    
     <button class="nav-whatsapp-item" onclick="navigateToSection('home', '')">
         <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
         <span>inicio</span>
@@ -955,10 +937,6 @@
         <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
         <span>archivos</span>
     </button>
-    <button class="nav-whatsapp-item" onclick="navigateToSection('category', 'película')">
-        <svg viewBox="0 0 24 24"><path d="M2 22h20V7H2v15zM2 7l4-4h3l-4 4M9 7l4-4h3l-4 4M16 7l4-4h2l-4 4" stroke-linejoin="round"/></svg>
-        <span>películas</span>
-    </button>
     <button class="nav-whatsapp-item" onclick="navigateToSection('category', 'herramienta')">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         <span>herramientas</span>
@@ -966,9 +944,7 @@
 </div>
 
 <script>
-    // Configuración inicial del historial y estados de la SPA
-    window.history.replaceState({ view: 'home' }, '');
-
+    // Inicialización de historial y Enlaces Profundos (Deep Links)
     window.addEventListener('DOMContentLoaded', () => {
         const pLoader = document.getElementById('page-loader');
         pLoader.style.width = '40%';
@@ -979,7 +955,21 @@
             if(btns.length > 0) updateNavIndicator(btns[0]);
         }, 100);
 
-        // Control deslizante táctil de la barra inferior
+        // Trampa base para poder requerir el "doble atrás para salir"
+        window.history.replaceState({ view: 'exit_trap' }, '');
+
+        // Revisar si en la URL hay una ID para cargarla directo
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        
+        if (id) {
+            window.history.pushState({ view: 'download', id: id }, '', '?id=' + id);
+            startLoading(id, true);
+        } else {
+            window.history.pushState({ view: 'home' }, '', window.location.pathname);
+        }
+
+        // Script de arrastre de la barra base
         const navContainer = document.querySelector('.bottom-nav-whatsapp');
         const indicator = document.getElementById('nav-indicator');
         let isDraggingIndicator = false;
@@ -1042,35 +1032,60 @@
         updateNavIndicator(activeBtn);
     });
 
-    // Manejador del botón "Atrás" físico/gesto del celular de forma nativa
+    // Control del botón hacia atrás nativo y función "Doble toque para salir"
+    let lastBackPress = 0;
     window.addEventListener('popstate', (event) => {
         closeDrawer();
         closeInfo();
         
-        const loadingScreen = document.getElementById('loading-screen');
-        if (loadingScreen.style.display === 'flex') {
-            loadingScreen.style.display = 'none';
-            if (window.loadingInterval) clearInterval(window.loadingInterval);
-        }
+        if (window.loadingInterval) clearInterval(window.loadingInterval);
 
-        if (event.state) {
-            if (event.state.view === 'category') {
-                executeCategoryFilter(event.state.category, false);
-            } else if (event.state.view === 'search') {
-                document.getElementById('search-input').value = event.state.term;
-                executeSearch(event.state.term, false);
+        if (!event.state || event.state.view === 'exit_trap') {
+            const now = Date.now();
+            if (now - lastBackPress < 1500) {
+                // Doble toque registrado -> Dejamos que el navegador salga/cierre la pestaña
+                window.history.back(); 
             } else {
+                lastBackPress = now;
+                showToast('Presiona de nuevo para salir');
+                // Empujamos el estado home nuevamente para atraparlo
+                window.history.pushState({ view: 'home' }, '', window.location.pathname);
+                showMainView();
                 executeResetToHome(false);
             }
+        } else if (event.state.view === 'download') {
+            startLoading(event.state.id, true);
+        } else if (event.state.view === 'category') {
+            showMainView();
+            executeCategoryFilter(event.state.category, false);
+        } else if (event.state.view === 'search') {
+            showMainView();
+            document.getElementById('search-input').value = event.state.term;
+            executeSearch(event.state.term, false);
+        } else if (event.state.view === 'home') {
+            showMainView();
+            executeResetToHome(false);
         } else {
+            showMainView();
             executeResetToHome(false);
         }
     });
 
+    function showMainView() {
+        document.getElementById('main-view').style.display = 'block';
+        document.getElementById('download-view').style.display = 'none';
+        
+        // Volvemos a mostrar la barra de navegación al volver a la vista principal
+        const navBar = document.querySelector('.bottom-nav-whatsapp');
+        if (navBar) {
+            navBar.style.display = 'flex';
+        }
+    }
+
     function updateNavIndicator(btn) {
         const indicator = document.getElementById('nav-indicator');
         const nav = document.querySelector('.bottom-nav-whatsapp');
-        if(!indicator || !btn) return;
+        if(!indicator || !btn || nav.style.display === 'none') return;
         
         document.querySelectorAll('.nav-whatsapp-item').forEach(b => b.removeAttribute('data-active'));
         btn.setAttribute('data-active', 'true');
@@ -1082,7 +1097,6 @@
         indicator.style.left = `${btnRect.left - navRect.left}px`;
     }
 
-    // Historial de Búsquedas Recientes
     let recentSearches = JSON.parse(localStorage.getItem('fylio_recents')) || [];
 
     function saveSearch(term) {
@@ -1288,48 +1302,36 @@
         },
     ];
 
-    const MOVIES_DATA = [
-        {
-            id: 'demon-slayer-castillo-infinito',
-            title: 'Demon Slayer: castillo infinito',
-            keys: ['demon slayer', 'castillo infinito', 'demon', 'slayer', 'castillo', 'infinito', 'kimetsu', 'kimetsu no yaiba'],
-            link: 'https://gofile.io/d/814jVB',
-            isImage: true,
-            bgValue: 'linear-gradient(135deg, #8b0000, #e50914)', 
-            bannerText: 'Demon slayer: infinity castle',
-            etiqueta: 'nuevo',
-            date: '2026-06-25',
-            category: 'película'
-        }
-    ];
-
     function calculateCardBadge(etiqueta) {
-        if (etiqueta === 'nuevo') {
-            return `<span class="card-badge badge-nuevo">Nuevo</span>`;
-        } else if (etiqueta === 'actualizado') {
-            return `<span class="card-badge badge-actualizado">Actualizado</span>`;
-        }
+        if (etiqueta === 'nuevo') return `<span class="card-badge badge-nuevo">Nuevo</span>`;
+        if (etiqueta === 'actualizado') return `<span class="card-badge badge-actualizado">Actualizado</span>`;
         return '';
     }
 
-    function shareElement(event, title, sharedLink) {
+    function showToast(message) {
+        const toast = document.getElementById('toast-notification');
+        toast.textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 2500);
+    }
+
+    function shareElement(event, title, id) {
         event.stopPropagation(); 
+        const shareUrl = window.location.origin + window.location.pathname + '?id=' + id;
+        
         if (navigator.share) {
             navigator.share({
                 title: title,
-                text: `¡Descarga ${title} totalmente rápido en fylio!`,
-                url: sharedLink
+                text: `¡Descarga ${title} rápido en fylio!`,
+                url: shareUrl
             }).catch(err => console.log('Error compartiendo:', err));
         } else {
-            navigator.clipboard.writeText(sharedLink).then(() => {
-                const toast = document.getElementById('toast-notification');
-                toast.classList.add('show');
-                setTimeout(() => { toast.classList.remove('show'); }, 2500);
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                showToast('¡Enlace de la app copiado!');
             });
         }
     }
 
-    // Funciones del Menú Drawer Izquierdo
     function toggleDrawer() {
         const drawer = document.getElementById('side-drawer');
         const overlay = document.getElementById('drawer-overlay');
@@ -1350,17 +1352,19 @@
         }, 300);
     }
 
-    // Métodos de Navegación con Historial Nativo
     function navigateToSection(type, value) {
         closeDrawer();
         if (type === 'home') {
-            window.history.pushState({ view: 'home' }, '');
+            window.history.pushState({ view: 'home' }, '', window.location.pathname);
+            showMainView();
             executeResetToHome(true);
         } else if (type === 'category') {
-            window.history.pushState({ view: 'category', category: value }, '');
+            window.history.pushState({ view: 'category', category: value }, '', window.location.pathname);
+            showMainView();
             executeCategoryFilter(value, true);
         } else if (type === 'search') {
-            window.history.pushState({ view: 'search', term: value }, '');
+            window.history.pushState({ view: 'search', term: value }, '', window.location.pathname);
+            showMainView();
             executeSearch(value, true);
         }
     }
@@ -1376,14 +1380,14 @@
         if (window.loadingInterval) clearInterval(window.loadingInterval);
 
         const btns = document.querySelectorAll('.nav-whatsapp-item');
-        if(btns.length > 0) updateNavIndicator(btns[0]);
+        if(btns.length > 0) {
+            setTimeout(() => { updateNavIndicator(btns[0]); }, 10);
+        }
         if(scrollUp) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function handleSearchKey(event) {
-        if (event.key === 'Enter') {
-            performSearch();
-        }
+        if (event.key === 'Enter') performSearch();
     }
 
     function performSearch() {
@@ -1415,7 +1419,7 @@
                 const tagBadge = calculateCardBadge(app.etiqueta);
                 
                 resultsContainer.innerHTML += `
-                    <div class="result-item" onclick="startLoading('${app.id}', 'app')" style="animation-delay: ${animationIndex * 0.08}s;">
+                    <div class="result-item" onclick="startLoading('${app.id}')" style="animation-delay: ${animationIndex * 0.08}s;">
                         ${tagBadge}
                         <div class="banner-dynamic" style="${styleValue}">
                             ${app.bannerText}
@@ -1427,31 +1431,7 @@
                             <span class="info-tag">Tamaño: ${app.size}</span>
                         </div>
                         <div class="card-actions">
-                            <button class="share-card-btn" onclick="shareElement(event, '${app.title.replace(/'/g, "\\'")}', '${app.link}')">
-                                <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
-                                Compartir
-                            </button>
-                        </div>
-                    </div>`;
-                found = true;
-                animationIndex++;
-            }
-        });
-
-        MOVIES_DATA.forEach(movie => {
-            if (movie.keys.some(k => k.toLowerCase().includes(value) || value.includes(k.toLowerCase()))) {
-                const styleValue = movie.isImage ? `background-image: ${movie.bgValue};` : `background-color: ${movie.bgValue};`;
-                const tagBadge = calculateCardBadge(movie.etiqueta);
-                
-                resultsContainer.innerHTML += `
-                    <div class="result-item" onclick="startLoading('${movie.id}', 'movie')" style="animation-delay: ${animationIndex * 0.08}s;">
-                        ${tagBadge}
-                        <div class="banner-dynamic" style="${styleValue}">
-                            ${movie.bannerText}
-                        </div>
-                        <h3 class="result-title">${movie.title}</h3>
-                        <div class="card-actions">
-                            <button class="share-card-btn" onclick="shareElement(event, '${movie.title.replace(/'/g, "\\'")}', '${movie.link}')">
+                            <button class="share-card-btn" onclick="shareElement(event, '${app.title.replace(/'/g, "\\'")}', '${app.id}')">
                                 <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
                                 Compartir
                             </button>
@@ -1483,34 +1463,25 @@
         let found = false;
         let animationIndex = 0;
 
-        const allItems = [...APPS_DATA, ...MOVIES_DATA];
-
-        allItems.forEach(item => {
+        APPS_DATA.forEach(item => {
             if (item.category === cat) {
                 const styleValue = item.isImage ? `background-image: ${item.bgValue};` : `background-color: ${item.bgValue};`;
                 const tagBadge = calculateCardBadge(item.etiqueta);
-                const isApp = item.fileName ? 'app' : 'movie';
                 
-                let technicalTags = '';
-                if (item.fileName) {
-                    technicalTags = `
-                        <div class="file-info-tags">
-                            <span class="info-tag">Archivo: ${item.fileName}</span>
-                            <span class="info-tag">Versión: ${item.version}</span>
-                            <span class="info-tag">Tamaño: ${item.size}</span>
-                        </div>`;
-                }
-
                 resultsContainer.innerHTML += `
-                    <div class="result-item" onclick="startLoading('${item.id}', '${isApp}')" style="animation-delay: ${animationIndex * 0.08}s;">
+                    <div class="result-item" onclick="startLoading('${item.id}')" style="animation-delay: ${animationIndex * 0.08}s;">
                         ${tagBadge}
                         <div class="banner-dynamic" style="${styleValue}">
                             ${item.bannerText}
                         </div>
                         <h3 class="result-title">${item.title}</h3>
-                        ${technicalTags}
+                        <div class="file-info-tags">
+                            <span class="info-tag">Archivo: ${item.fileName}</span>
+                            <span class="info-tag">Versión: ${item.version}</span>
+                            <span class="info-tag">Tamaño: ${item.size}</span>
+                        </div>
                         <div class="card-actions">
-                            <button class="share-card-btn" onclick="shareElement(event, '${item.title.replace(/'/g, "\\'")}', '${item.link}')">
+                            <button class="share-card-btn" onclick="shareElement(event, '${item.title.replace(/'/g, "\\'")}', '${item.id}')">
                                 <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
                                 Compartir
                             </button>
@@ -1522,9 +1493,9 @@
         });
 
         const btns = document.querySelectorAll('.nav-whatsapp-item');
-        const indexMap = { 'app': 1, 'juego': 2, 'archivo': 3, 'película': 4, 'herramienta': 5 };
+        const indexMap = { 'app': 1, 'juego': 2, 'archivo': 3, 'herramienta': 4 };
         if(indexMap[cat] !== undefined) {
-            updateNavIndicator(btns[indexMap[cat]]);
+            setTimeout(() => { updateNavIndicator(btns[indexMap[cat]]); }, 10);
         }
 
         if (found) {
@@ -1536,89 +1507,125 @@
         if(scrollUp) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    const PLAY_CIRCLE_ICON = `<svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16" fill="currentColor"></polygon></svg>`;
-    const LOCK_ICON = `<svg id="lock-icon" class="lock-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`;
+    function renderRecommendations(category, currentId) {
+        const container = document.getElementById('recommendations-list');
+        container.innerHTML = '';
+        
+        // Filtra por la misma categoría pero excluye la que se está viendo
+        const recommendations = APPS_DATA.filter(item => item.category === category && item.id !== currentId);
+        
+        if (recommendations.length > 0) {
+            document.getElementById('recommendations-container').style.display = 'block';
+            // Toma hasta 3 recomendaciones
+            recommendations.slice(0, 3).forEach((item, index) => {
+                const styleValue = item.isImage ? `background-image: ${item.bgValue};` : `background-color: ${item.bgValue};`;
+                const tagBadge = calculateCardBadge(item.etiqueta);
+                
+                container.innerHTML += `
+                <div class="result-item" onclick="startLoading('${item.id}')" style="animation-delay: ${index * 0.08}s; margin-bottom: 16px;">
+                    ${tagBadge}
+                    <div class="banner-dynamic" style="${styleValue}">
+                        ${item.bannerText}
+                    </div>
+                    <h3 class="result-title">${item.title}</h3>
+                </div>`;
+            });
+        } else {
+            document.getElementById('recommendations-container').style.display = 'none';
+        }
+    }
 
-    function startLoading(id, type) {
-        // Añadir estado al historial para que el botón atrás cierre la pantalla de descarga
-        window.history.pushState({ view: 'loading' }, '');
+    function startLoading(id, isHistoryPop = false) {
+        if (!isHistoryPop) {
+            window.history.pushState({ view: 'download', id: id }, '', '?id=' + id);
+        }
 
-        const screen = document.getElementById('loading-screen'), 
-              img = document.getElementById('loading-image'), 
-              title = document.getElementById('loading-title'), 
+        // Alternar Vistas
+        document.getElementById('main-view').style.display = 'none';
+        document.getElementById('download-view').style.display = 'block';
+        window.scrollTo(0, 0);
+
+        // Ocultar barra de navegación inferior al entrar a la vista de descarga
+        const navBar = document.querySelector('.bottom-nav-whatsapp');
+        if (navBar) {
+            navBar.style.display = 'none';
+        }
+
+        const img = document.getElementById('dl-image'), 
+              title = document.getElementById('dl-title'), 
               btn = document.getElementById('download-btn'),
               loaderContainer = document.getElementById('circular-loader'),
               circleProgress = document.getElementById('circle-progress'),
               countdownText = document.getElementById('countdown-text');
         
-        img.innerHTML = '';
-        img.style.backgroundImage = "none";
-        img.style.backgroundColor = "transparent";
+        const item = APPS_DATA.find(a => a.id === id);
+        if(!item) return;
 
-        const item = type === 'movie' 
-            ? MOVIES_DATA.find(m => m.id === id) 
-            : APPS_DATA.find(a => a.id === id);
-        
-        if (item) {
-            img.innerHTML = `<div style="color:white; font-size:40px; font-weight:bold;">${item.bannerText}</div>`;
-            if (item.isImage) {
-                img.style.backgroundImage = item.bgValue;
-            } else {
-                img.style.backgroundColor = item.bgValue;
-            }
-            title.textContent = item.title;
-            btn.dataset.link = item.link;
-        }
-
-        btn.classList.remove('active'); 
-        btn.disabled = true; 
-        
-        if (type === 'movie') {
-            btn.innerHTML = `${PLAY_CIRCLE_ICON} Cargando...`;
+        img.innerHTML = `<div style="color:white; font-size:40px; font-weight:bold; text-align:center;">${item.bannerText}</div>`;
+        if (item.isImage) {
+            img.style.backgroundImage = item.bgValue;
+            img.style.backgroundColor = 'transparent';
         } else {
-            btn.innerHTML = `${LOCK_ICON} Loading...`;
+            img.style.backgroundImage = 'none';
+            img.style.backgroundColor = item.bgValue;
         }
+
+        title.textContent = item.title;
+        btn.dataset.link = item.link;
+
+        // Reset estado inicial de descarga
+        loaderContainer.style.display = 'none';
+        btn.classList.add('active'); 
+        btn.classList.remove('inset-border');
+        btn.disabled = false; 
+        btn.innerHTML = `Descargar`;
         
         const totalProgress = 276.46; 
         circleProgress.style.strokeDashoffset = totalProgress; 
         loaderContainer.classList.remove('complete');
         
-        let timeLeft = 10;
-        countdownText.textContent = timeLeft;
-        
-        screen.style.display = 'block';
-
         if (window.loadingInterval) clearInterval(window.loadingInterval);
 
-        window.loadingInterval = setInterval(() => {
-            timeLeft--;
-            const offset = totalProgress - ((10 - timeLeft) / 10) * totalProgress;
-            circleProgress.style.strokeDashoffset = offset;
-            
-            if (timeLeft >= 0) {
-                countdownText.textContent = timeLeft;
-            }
+        // Renderizar recomendaciones antes de iniciar todo
+        renderRecommendations(item.category, item.id);
 
-            if (timeLeft <= 0) {
-                clearInterval(window.loadingInterval); 
-                loaderContainer.classList.add('complete'); 
+        btn.onclick = () => {
+            // Efecto visual: borde interior blanco/negro según tema
+            btn.classList.add('inset-border');
+
+            // Comenzar cuenta regresiva
+            btn.disabled = true;
+            btn.innerHTML = 'Preparando enlace...';
+            loaderContainer.style.display = 'block';
+
+            let timeLeft = 10;
+            countdownText.textContent = timeLeft;
+
+            window.loadingInterval = setInterval(() => {
+                timeLeft--;
+                const offset = totalProgress - ((10 - timeLeft) / 10) * totalProgress;
+                circleProgress.style.strokeDashoffset = offset;
                 
-                if (type === 'movie') {
-                    btn.innerHTML = `${PLAY_CIRCLE_ICON} Ver ahora`;
-                } else {
-                    btn.innerHTML = `Download`; 
+                if (timeLeft >= 0) {
+                    countdownText.textContent = timeLeft;
                 }
-                
-                btn.classList.add('active'); 
-                btn.disabled = false; 
-                btn.onclick = () => window.location.href = btn.dataset.link;
-            }
-        }, 1000);
+
+                if (timeLeft <= 0) {
+                    clearInterval(window.loadingInterval); 
+                    loaderContainer.classList.add('complete'); 
+                    
+                    btn.classList.remove('inset-border');
+                    btn.innerHTML = `Obtener Archivo`;
+                    btn.disabled = false; 
+                    btn.onclick = () => window.location.href = btn.dataset.link;
+                }
+            }, 1000);
+        };
     }
 
     function mostrarInformacion() {
         closeDrawer();
-        window.history.pushState({ view: 'info' }, '');
+        window.history.pushState({ view: 'info' }, '', window.location.pathname);
         document.getElementById('info-modal').style.display = 'flex';
     }
 
