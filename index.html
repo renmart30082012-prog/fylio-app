@@ -4,6 +4,7 @@
     <script defer src="https://cloud.umami.is/script.js" data-website-id="0427147e-a032-4fca-82ee-4af33ca00651"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <title>Descarga APK Y Más</title>
     <link class="favicon" rel="icon" href="favicon-claro.png" media="(prefers-color-scheme: light)">
     <link class="favicon" rel="icon" href="favicon-oscuro.png" media="(prefers-color-scheme: dark)">
@@ -19,6 +20,7 @@
     <style>
         /* Variables globales - Tema Claro por defecto */
         :root {
+            color-scheme: light dark;
             --bg-color: #f9f9f9;
             --danger: #dc3545;
             --modal-bg: white;
@@ -31,7 +33,7 @@
             --nav-bg: #ffffff;
             --nav-icon-color: #000000;
             --nav-indicator-bg: rgba(0, 0, 0, 0.08);
-            --btn-inset-color: rgba(0, 0, 0, 0.4); /* Borde negro desaturado para tema claro */
+            --btn-inset-color: rgba(0, 0, 0, 0.4);
         }
 
         .page-loader {
@@ -121,7 +123,7 @@
                 --nav-bg: #161920;
                 --nav-icon-color: #ffffff;
                 --nav-indicator-bg: rgba(255, 255, 255, 0.15);
-                --btn-inset-color: rgba(255, 255, 255, 0.4); /* Borde blanco desaturado para tema oscuro */
+                --btn-inset-color: rgba(255, 255, 255, 0.4);
             }
             .animated-background {
                 background-color: #0d0f14;
@@ -570,7 +572,7 @@
         .banner-dynamic {
             align-items: center;
             border-radius: 8px;
-            color: white;
+            color: #ffffff !important; /* Forzar el texto a blanco siempre */
             display: flex;
             font-size: 40px;
             font-weight: bold;
@@ -580,6 +582,10 @@
             width: 100%;
             background-position: center;
             background-size: cover;
+            /* Propiedades para obligar a Samsung Internet a respetar el color original */
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            isolation: isolate; 
         }
 
         .result-title {
@@ -606,6 +612,10 @@
             align-items: center;
             justify-content: center;
             display: flex;
+            color: #ffffff !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            isolation: isolate;
         }
 
         .loading-title {
@@ -694,13 +704,28 @@
             margin: 0 auto;
             max-width: 200px;
             padding: 13px 28px;
-            transition: all 0.3s;
             width: 100%;
             position: relative;
+            /* Nuevas transiciones para la animación del botón */
+            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .download-btn:active:not(:disabled) {
+            transform: scale(0.92);
+        }
+
+        .download-btn.animating {
+            animation: pulseClick 0.4s ease-out;
+        }
+
+        @keyframes pulseClick {
+            0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(0, 123, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
         }
 
         .download-btn.inset-border {
-            /* Borde interno blanco o negro semitransparente según tema activo */
             box-shadow: inset 0 0 0 2px var(--btn-inset-color);
         }
 
@@ -729,7 +754,7 @@
             left: 50%;
             transform: translateX(-50%);
             width: 85%;
-            max-width: 320px; /* Reducido para que la barra sea más corta */
+            max-width: 320px;
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
@@ -955,18 +980,25 @@
             if(btns.length > 0) updateNavIndicator(btns[0]);
         }, 100);
 
-        // Trampa base para poder requerir el "doble atrás para salir"
-        window.history.replaceState({ view: 'exit_trap' }, '');
-
-        // Revisar si en la URL hay una ID para cargarla directo
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
         
-        if (id) {
-            window.history.pushState({ view: 'download', id: id }, '', '?id=' + id);
-            startLoading(id, true);
+        // Manejo robusto del historial para no sacar al usuario de la web al retroceder
+        if (!window.history.state || !window.history.state.view) {
+            window.history.replaceState({ view: 'exit_trap' }, '');
+            if (id) {
+                // Aseguramos de tener siempre un estado 'home' en la base del historial
+                window.history.pushState({ view: 'home' }, '', window.location.pathname);
+                window.history.pushState({ view: 'download', id: id }, '', '?id=' + id);
+                startLoading(id, true);
+            } else {
+                window.history.pushState({ view: 'home' }, '', window.location.pathname);
+            }
         } else {
-            window.history.pushState({ view: 'home' }, '', window.location.pathname);
+            // Si ya hay un estado en historial activo (por ejemplo, recarga)
+            if (id) {
+                startLoading(id, true);
+            }
         }
 
         // Script de arrastre de la barra base
@@ -1042,13 +1074,12 @@
 
         if (!event.state || event.state.view === 'exit_trap') {
             const now = Date.now();
-            if (now - lastBackPress < 1500) {
-                // Doble toque registrado -> Dejamos que el navegador salga/cierre la pestaña
-                window.history.back(); 
+            if (now - lastBackPress < 2000) { // Ampliado el tiempo a 2 segundos
+                window.history.go(-1); 
             } else {
                 lastBackPress = now;
                 showToast('Presiona de nuevo para salir');
-                // Empujamos el estado home nuevamente para atraparlo
+                // Al presionar solo una vez, volvemos a poner 'home' para evitar que se cierre
                 window.history.pushState({ view: 'home' }, '', window.location.pathname);
                 showMainView();
                 executeResetToHome(false);
@@ -1075,7 +1106,6 @@
         document.getElementById('main-view').style.display = 'block';
         document.getElementById('download-view').style.display = 'none';
         
-        // Volvemos a mostrar la barra de navegación al volver a la vista principal
         const navBar = document.querySelector('.bottom-nav-whatsapp');
         if (navBar) {
             navBar.style.display = 'flex';
@@ -1354,6 +1384,12 @@
 
     function navigateToSection(type, value) {
         closeDrawer();
+        
+        // Evitamos que se empujen estados idénticos al historial
+        if (window.history.state && window.history.state.view === type && window.history.state.category === value) {
+            return;
+        }
+
         if (type === 'home') {
             window.history.pushState({ view: 'home' }, '', window.location.pathname);
             showMainView();
@@ -1590,7 +1626,11 @@
         renderRecommendations(item.category, item.id);
 
         btn.onclick = () => {
-            // Efecto visual: borde interior blanco/negro según tema
+            // Activa la animación del botón
+            btn.classList.add('animating');
+            setTimeout(() => btn.classList.remove('animating'), 400);
+
+            // Efecto visual: borde interno
             btn.classList.add('inset-border');
 
             // Comenzar cuenta regresiva
@@ -1636,3 +1676,4 @@
 
 </body>
 </html>
+
