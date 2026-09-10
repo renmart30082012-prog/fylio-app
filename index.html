@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="0427147e-a032-4fca-82ee-4af33ca00651"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Descarga APK Y Más</title>
+    <link class="favicon" rel="icon" href="favicon-claro.png" media="(prefers-color-scheme: light)">
+    <link class="favicon" rel="icon" href="favicon-oscuro.png" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="styles.css">
+    <meta property="og:title" content="Descarga APK Y Más">
+    <meta property="og:description" content="Busca Menos, Encuentra Más">
+    <meta property="og:image" content="https://fylio-app.vercel.app/favicon-claro.png">
+    <meta property="og:url" content="https://fylio-app.vercel.app/">
+    <meta property="og:site_name" content="Fylio descargas">
+    <meta name="application-name" content="Fylio descargas">
+    <meta property="fb:app_id" content="TU_ID_AQUÍ">
+    <meta property="og:type" content="website">
+    <style>
+        /* Variables globales - Tema Claro por defecto */
+        :root {
+            color-scheme: light dark;
+            --bg-color: #f9f9f9;
+            --danger: #dc3545;
+            --modal-bg: white;
+            --primary: #007bff;
+            --success: #28a745;
+            --text-color: #333;
+            --btn-border: #d1d5db;
+            --svg-color: #000000;
+            --float-icon-color: #a0a0a0;
+            --nav-bg: #ffffff;
+            --nav-icon-color: #000000;
+            --nav-indicator-bg: rgba(0, 0, 0, 0.08);
+            --btn-inset-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), #00d2ff);
+            width: 0%;
+            z-index: 10000;
+            transition: width 0.4s ease, opacity 0.3s ease;
+        }
+
+        .animated-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-color: #ffffff;
+            overflow: hidden;
+            transition: background-color 0.4s ease;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        .animated-background::before,
+        .animated-background::after {
+            content: '';
+            position: absolute;
+            width: 140vmax;
+            height: 140vmax;
+            top: -20vmax;
+            left: -20vmax;
+            background: radial-gradient(circle at 20% 30%, #ffdfdf 0%, transparent 55%),
+                        radial-gradient(circle at 80% 40%, #d1f7ff 0%, transparent 55%),
+                        radial-gradient(circle at 40% 80%, #e0d1ff 0%, transparent 55%);
+            filter: blur(40px); 
+            transform: translate3d(0,0,0);
+            will-change: transform;
+            animation: liquid-movement-1 22s infinite alternate ease-in-out;
+        }
+
+        .animated-background::after {
+            background: radial-gradient(circle at 70% 20%, #d1f7ff 0%, transparent 45%),
+                        radial-gradient(circle at 30% 70%, #ffdfdf 0%, transparent 50%);
+            animation: liquid-movement-2 17s infinite alternate ease-in-out;
+            opacity: 0.8;
+        }
+
+        .floating-icons-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-icon {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            color: var(--float-icon-color);
+            opacity: 0.35;
+            animation: soft-float 16s infinite ease-in-out alternate;
+        }
+
+        @keyframes soft-float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(20px, -30px) rotate(10deg); }
+            100% { transform: translate(-10px, 20px) rotate(-10deg); }
+        }
+
+        /* DETECCIÓN AUTOMÁTICA DEL MODO OSCURO */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0d0f14;
+                --modal-bg: #161920;
+                --text-color: #f0f4f8;
+                --btn-border: #2d3139;
+                --svg-color: #ffffff;
+                --primary: #388bfd;
+                --float-icon-color: #b0b3b8;
+                --nav-bg: #161920;
+                --nav-icon-color: #ffffff;
+                --nav-indicator-bg: rgba(255, 255, 255, 0.15);
+                --btn-inset-color: rgba(255, 255, 255, 0.4);
+            }
+            .animated-background {
+                background-color: #0d0f14;
+            }
+            .animated-background::before {
+                background: radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.12) 0%, transparent 55%),
+                            radial-gradient(circle at 80% 40%, rgba(56, 139, 253, 0.12) 0%, transparent 55%),
+                            radial-gradient(circle at 40% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 55%);
+                opacity: 1;
+            }
+            .animated-background::after {
+                background: radial-gradient(circle at 70% 20%, rgba(56, 139, 253, 0.12) 0%, transparent 45%),
+                            radial-gradient(circle at 30% 70%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+                opacity: 1;
+            }
+            header {
+                background: rgba(13, 15, 20, 0.5) !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            }
+        }
+
+        @keyframes liquid-movement-1 {
+            0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate3d(3vw, 4vh, 0) scale(1.05) rotate(45deg); }
+            100% { transform: translate3d(-1vw, 2vh, 0) scale(0.95) rotate(90deg); }
+        }
+
+        @keyframes liquid-movement-2 {
+            0% { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate3d(-3vw, -2vh, 0) scale(0.95) rotate(-45deg); }
+            100% { transform: translate3d(2vw, 3vh, 0) scale(1.02) rotate(-90deg); }
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        header {
+            align-items: center;
+            background: rgba(255, 255, 255, 0.4); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .brand-container {
+            align-items: center;
+            display: flex;
+            gap: 8px;
+        }
+
+        .brand-logo {
+            height: 24px;
+            width: auto;
+            display: block;
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .icon-btn {
+            align-items: center;
+            background: none;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            height: 28px;
+            justify-content: center;
+            transition: background 0.2s;
+            width: 28px;
+        }
+
+        .icon-btn:hover { background: rgba(128,128,128,0.1); }
+
+        .icon-btn svg {
+            fill: none;
+            height: 22px;
+            stroke: var(--text-color);
+            stroke-width: 2;
+            width: 22px;
+        }
+
+        .search-container-full {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: rgba(128, 128, 128, 0.08);
+            border: 1px solid var(--btn-border);
+            border-radius: 50px;
+            padding: 10px 20px;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            z-index: 2;
+        }
+
+        .search-container-full input {
+            width: 100%;
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        .search-container-full svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: var(--text-color);
+            stroke-width: 2;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+
+        .search-container-full input:not(:placeholder-shown) + svg {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* BOTONES SOCIALES */
+        .social-buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            margin-top: -5px;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .social-buttons-container.hidden {
+            opacity: 0;
+            transform: scale(0.95) translateY(-10px);
+            pointer-events: none;
+        }
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(128, 128, 128, 0.08);
+            border: 1px solid var(--btn-border);
+            color: var(--text-color);
+            transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), background 0.2s, border-color 0.2s;
+        }
+        .social-btn:hover {
+            background: rgba(128, 128, 128, 0.15);
+            border-color: var(--primary);
+            transform: translateY(-3px) scale(1.05);
+        }
+        .social-btn svg {
+            width: 22px;
+            height: 22px;
+        }
+        .telegram-btn:hover { color: #0088cc; border-color: #0088cc; }
+        .youtube-btn:hover { color: #ff0000; border-color: #ff0000; }
+        .whatsapp-btn:hover { color: #25d366; border-color: #25d366; }
+
+        .recent-searches-container {
+            display: none;
+            background: rgba(128, 128, 128, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--btn-border);
+            border-radius: 20px;
+            padding: 15px;
+            margin: -10px 0 20px 0;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            text-align: left;
+            position: relative;
+            z-index: 1;
+            animation: fadeDown 0.3s ease;
+        }
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .recent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--float-icon-color);
+            margin-bottom: 10px;
+            padding: 0 5px;
+        }
+        .recent-header button {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .recent-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.2s;
+            color: var(--text-color);
+        }
+        .recent-item:hover {
+            background: rgba(128, 128, 128, 0.08);
+        }
+        .recent-item svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--float-icon-color);
+        }
+
+        main {
+            margin: 0 auto;
+            max-width: 500px;
+            padding: 40px 20px 100px;
+            text-align: center;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            margin-top: 15px;
+            opacity: 0.8;
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+            display: none;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-drawer {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: var(--modal-bg);
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+            z-index: 2001;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 16px;
+            transition: left 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+        }
+
+        .drawer-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .side-btn {
+            align-items: center;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            font-weight: 500;
+            gap: 14px;
+            margin-bottom: 8px;
+            padding: 12px 16px;
+            text-align: left;
+            transition: background 0.2s;
+            width: 100%;
+            font-size: 0.95rem;
+        }
+
+        .side-btn:hover { background: rgba(128, 128, 128, 0.08); }
+
+        .side-btn svg {
+            fill: none;
+            height: 20px;
+            stroke: var(--svg-color);
+            stroke-width: 2;
+            width: 20px;
+        }
+
+        .overlay {
+            align-items: center;
+            backdrop-filter: blur(2px);
+            background: rgba(0,0,0,0.5);
+            display: none;
+            height: 100%;
+            justify-content: center;
+            left: 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 2000;
+        }
+
+        .modal-box {
+            background: var(--modal-bg);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            padding: 24px;
+            width: 320px;
+            max-width: 90%;
+        }
+
+        .modal-box h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        /* Estilos para Formularios en Modales */
+        .modal-box input, .modal-box select {
+            width: 100%;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--btn-border);
+            background: rgba(128, 128, 128, 0.08);
+            color: var(--text-color);
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .modal-box label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            font-weight: 600;
+            text-align: left;
+        }
+        .modal-box button.btn-primary {
+            width: 100%;
+            padding: 12px;
+            border-radius: 50px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        #search-results {
+            display: none;
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        .result-item {
+            background: var(--modal-bg);
+            border: 1px solid var(--btn-border);
+            border-radius: 12px;
+            cursor: pointer;
+            margin-bottom: 24px;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: cardFadeIn 0.4s ease-out forwards;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                        box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                        border-color 0.3s ease;
+        }
+
+        @keyframes cardFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+            transform: translateY(-4px) scale(1.01);
+        }
+        
+        .result-item:active {
+            transform: translateY(-1px) scale(0.99);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 5;
+            letter-spacing: 0.5px;
+        }
+        .badge-nuevo { background-color: var(--success); }
+        .badge-actualizado { background-color: #f39c12; }
+
+        .file-info-tags {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .info-tag {
+            background: rgba(128,128,128,0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.75;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 12px;
+            border-top: 1px solid rgba(128,128,128,0.08);
+            padding-top: 10px;
+        }
+
+        .share-card-btn {
+            background: transparent;
+            border: 1px solid var(--btn-border);
+            border-radius: 50px;
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .share-card-btn:hover {
+            background: rgba(128, 128, 128, 0.08);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .share-card-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .banner-dynamic {
+            align-items: center;
+            border-radius: 8px;
+            color: #ffffff !important;
+            display: flex;
+            font-size: 40px;
+            font-weight: bold;
+            height: 130px;
+            justify-content: center;
+            margin-bottom: 12px;
+            width: 100%;
+            background-position: center;
+            background-size: cover;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            isolation: isolate; 
+        }
+
+        .result-title {
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        /* Pantalla de Carga (Download View) */
+        #download-view {
+            display: none;
+            animation: fadeDown 0.3s ease;
+        }
+
+        .loading-image {
+            background-position: center;
+            background-size: cover;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            height: 160px;
+            margin: 0 auto 24px;
+            max-width: 100%;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            color: #ffffff !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            isolation: isolate;
+        }
+
+        .loading-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .circular-loader-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 24px auto;
+        }
+
+        .circular-loader-container svg {
+            transform: rotate(-90deg);
+            width: 100px;
+            height: 100px;
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: var(--btn-border);
+            stroke-width: 6;
+        }
+
+        .circle-progress {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-dasharray: 276.46;
+            stroke-dashoffset: 276.46;
+            transition: stroke-dashoffset 1s linear, stroke 0.3s;
+        }
+
+        .circular-loader-container.complete .circle-progress {
+            stroke: var(--success);
+        }
+
+        .circle-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .circle-content svg {
+            display: none;
+            width: 32px;
+            height: 32px;
+            stroke: var(--success);
+            stroke-width: 2.5;
+            fill: none;
+            transform: none;
+        }
+
+        .circular-loader-container.complete .circle-content svg {
+            display: block;
+        }
+        .circular-loader-container.complete .circle-content span {
+            display: none;
+        }
+
+        .download-btn {
+            align-items: center;
+            background: var(--modal-bg);
+            border: 1px solid var(--btn-border);
+            border-radius: 50px;
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            font-size: 16px;
+            font-weight: 500;
+            gap: 8px;
+            justify-content: center;
+            margin: 0 auto;
+            max-width: 200px;
+            padding: 13px 28px;
+            width: 100%;
+            position: relative;
+            transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .download-btn:active:not(:disabled) {
+            transform: scale(0.92);
+        }
+
+        .download-btn.animating {
+            animation: pulseClick 0.4s ease-out;
+        }
+
+        @keyframes pulseClick {
+            0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(0, 123, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+        }
+
+        .download-btn.inset-border {
+            box-shadow: inset 0 0 0 2px var(--btn-inset-color);
+        }
+
+        .download-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .download-btn.active {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+        }
+
+        .lock-icon {
+            fill: none;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 2;
+            width: 18px;
+        }
+
+        .bottom-nav-whatsapp {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            max-width: 320px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            border-radius: 40px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 6px 8px;
+            z-index: 999;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            touch-action: none; 
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .bottom-nav-whatsapp {
+                background: rgba(22, 25, 32, 0.85); 
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        .nav-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: calc(100% - 12px);
+            background: var(--nav-indicator-bg);
+            border-radius: 30px;
+            z-index: 0;
+            transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1), width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
+        }
+
+        .nav-whatsapp-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 500;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+            padding: 6px 0;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-whatsapp-item[data-active="true"] {
+            opacity: 1;
+        }
+
+        .nav-whatsapp-item svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--text-color);
+            fill: none;
+            stroke-width: 2;
+            margin-bottom: 3px;
+            transition: stroke 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+<div id="page-loader" class="page-loader"></div>
+
+<div class="animated-background">
+    <div class="floating-icons-container">
+        <!-- Contenedor de iconos -->
+    </div>
+</div>
+
+<header>
+    <button class="icon-btn" onclick="toggleDrawer()">
+        <svg viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+    <div class="brand-container">
+        <img src="logo.png" alt="" class="brand-logo" onerror="this.style.display='none'">
+        <span class="brand-name">Fylio</span>
+    </div>
+</header>
+
+<main>
+    <!-- Vista Principal (Buscador, Resultados, Inicio) -->
+    <div id="main-view">
+        <div id="welcome-text">
+            <h1>Bienvenido</h1>
+            <p class="intro-text">Estamos iniciando pero poco a poco añadiremos más apps y archivos para ti</p>
+        </div>
+
+        <div class="search-container-full">
+            <input type="text" id="search-input" placeholder="Buscar..." onkeypress="handleSearchKey(event)" onfocus="handleSearchFocus()" onblur="handleSearchBlur()">
+            <svg viewBox="0 0 24 24" onclick="performSearch()">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+        </div>
+
+        <!-- Redes sociales añadidas -->
+        <div id="social-buttons" class="social-buttons-container">
+            <a href="https://t.me/fylio_app" target="_blank" class="social-btn telegram-btn" aria-label="Telegram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </a>
+            <a href="https://youtube.com/@fylio_app?si=6pAXXaFEJYMspR89" target="_blank" class="social-btn youtube-btn" aria-label="YouTube">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+            </a>
+            <a href="https://whatsapp.com/channel/0029VbCmHdH3bbV2XBOSlT2h" target="_blank" class="social-btn whatsapp-btn" aria-label="WhatsApp">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            </a>
+        </div>
+
+        <div id="recent-searches" class="recent-searches-container">
+            <div class="recent-header">
+                <span>Buscado recientemente</span>
+                <button onmousedown="clearRecents()">Borrar</button>
+            </div>
+            <div id="recent-list"></div>
+        </div>
+
+        <div id="search-results"></div>
+    </div>
+
+    <!-- Vista de Descarga (Reemplaza la principal al entrar) -->
+    <div id="download-view">
+        <div id="dl-image" class="loading-image"></div>
+        <h3 id="dl-title" class="loading-title"></h3>
+        
+        <button id="download-btn" class="download-btn">Descargar</button>
+        
+        <div class="circular-loader-container" id="circular-loader" style="display:none;">
+            <svg>
+                <circle class="circle-bg" cx="50" cy="50" r="44"></circle>
+                <circle class="circle-progress" id="circle-progress" cx="50" cy="50" r="44"></circle>
+            </svg>
+            <div class="circle-content">
+                <span id="countdown-text">5</span>
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 6L9 17l-5-5"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Sección de recomendaciones -->
+        <div id="recommendations-container" style="display: none; margin-top: 50px; text-align: left;">
+            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px;">Recomendado para ti</h3>
+            <div id="recommendations-list"></div>
+        </div>
+    </div>
+</main>
+
+<div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+<div id="side-drawer" class="side-drawer">
+    <div class="drawer-header">
+        <span class="drawer-title">Menú</span>
+        <button class="icon-btn" onclick="closeDrawer()">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    </div>
+    <div id="side-menu-content">
+        <button class="side-btn" onclick="location.reload()">
+            <svg viewBox="0 0 24 24">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+            </svg>
+            Restablecer
+        </button>
+        <button class="side-btn" onclick="mostrarInformacion()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            Información
+        </button>
+        <!-- Botón de Iniciar sesión / Cerrar sesión dinámico -->
+        <div id="auth-btn-container"></div>
+        <!-- Botón para añadir aplicación (Solo al iniciar sesión) -->
+        <div id="add-app-btn-container" style="display: none;">
+            <button class="side-btn" onclick="openAddApp()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Añadir aplicación
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="info-modal" class="overlay" onclick="closeInfo()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin: 0;">Sobre Fylio</h3>
+            <button onclick="closeInfo()" style="background: none; border: none; cursor: pointer; font-size: 20px; color: var(--text-color);">✕</button>
+        </div>
+        <p style="font-size: 0.95rem; line-height: 1.6; opacity: 0.8;">
+            Fylio es un proyecto personal creado con el objetivo de facilitar el acceso a aplicaciones y archivos de forma sencilla.
+            La idea nació como una iniciativa independiente y continúa en desarrollo.<br><br>
+            Poco a poco se irán agregando nuevas aplicaciones, funciones y mejoras para ofrecer una experiencia cada vez mejor.<br><br>
+            Gracias por visitar Fylio y apoyar este proyecto.
+        </p>
+    </div>
+</div>
+
+<!-- Modal de Iniciar Sesión -->
+<div id="login-modal" class="overlay" onclick="closeLogin()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin: 0;">Iniciar sesión</h3>
+            <button onclick="closeLogin()" style="background: none; border: none; cursor: pointer; font-size: 20px; color: var(--text-color);">✕</button>
+        </div>
+        <form onsubmit="handleLogin(event)">
+            <label>Usuario</label>
+            <input type="text" id="login-user" placeholder="Ingresa tu usuario" required>
+            <label>Contraseña</label>
+            <input type="password" id="login-pass" placeholder="Ingresa tu contraseña" required>
+            <button type="submit" class="btn-primary">Iniciar sesión</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal de Añadir Aplicación -->
+<div id="add-app-modal" class="overlay" onclick="closeAddApp()">
+    <div class="modal-box" onclick="event.stopPropagation()" style="max-height: 85vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin: 0;">Añadir Aplicación</h3>
+            <button onclick="closeAddApp()" style="background: none; border: none; cursor: pointer; font-size: 20px; color: var(--text-color);">✕</button>
+        </div>
+        <form onsubmit="handleAddApp(event)">
+            <label>Nombre de la app</label>
+            <input type="text" id="app-name" placeholder="Ej: WhatsApp Plus" required>
+
+            <label>Versión de la app</label>
+            <input type="text" id="app-version" placeholder="Ej: v5.42F" required>
+
+            <label>Nombre del archivo</label>
+            <input type="text" id="app-filename" placeholder="Ej: Plus_YesiiMods.apk" required>
+
+            <label>Peso</label>
+            <input type="text" id="app-size" placeholder="Ej: 198 MB" required>
+
+            <label>Enlace de descarga</label>
+            <input type="url" id="app-link" placeholder="https://..." required>
+
+            <label>Categoría</label>
+            <select id="app-category" style="margin-bottom: 12px;">
+                <option value="app">App</option>
+                <option value="juego">Juego</option>
+                <option value="archivo">Archivo</option>
+                <option value="herramienta">Herramienta</option>
+            </select>
+
+            <label>Tipo de color de fondo</label>
+            <div style="display: flex; gap: 15px; margin-bottom: 12px; text-align: left;">
+                <label style="font-weight: normal; cursor: pointer;">
+                    <input type="radio" name="colorType" value="single" checked onchange="toggleColorInputs()"> Un solo color
+                </label>
+                <label style="font-weight: normal; cursor: pointer;">
+                    <input type="radio" name="colorType" value="gradient" onchange="toggleColorInputs()"> Degradado
+                </label>
+            </div>
+
+            <label>Código del color 1 (#...)</label>
+            <input type="text" id="app-color1" placeholder="#FF8512" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" required>
+
+            <div id="color2-container" style="display: none;">
+                <label>Código del color 2 (#...)</label>
+                <input type="text" id="app-color2" placeholder="#FF3E12" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$">
+            </div>
+
+            <button type="submit" class="btn-primary">Añadir Aplicación</button>
+        </form>
+    </div>
+</div>
+
+<div id="toast-notification" class="toast-notification"></div>
+
+<div class="bottom-nav-whatsapp">
+    <div id="nav-indicator" class="nav-indicator"></div>
+    <button class="nav-whatsapp-item" onclick="navigateToSection('home', '')">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10"/></svg>
+        <span>inicio</span>
+    </button>
+    <button class="nav-whatsapp-item" onclick="navigateToSection('category', 'app')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" ry="4"/></svg>
+        <span>app</span>
+    </button>
+    <button class="nav-whatsapp-item" onclick="navigateToSection('category', 'juego')">
+        <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 12h4M8 10v4M16 11h.01M18 13h.01" stroke-linecap="round"/></svg>
+        <span>juegos</span>
+    </button>
+    <button class="nav-whatsapp-item" onclick="navigateToSection('category', 'archivo')">
+        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <span>archivos</span>
+    </button>
+    <button class="nav-whatsapp-item" onclick="navigateToSection('category', 'herramienta')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <span>herramientas</span>
+    </button>
+</div>
+
+<script>
+    // Inicialización de historial y Enlaces Profundos (Deep Links)
+    window.addEventListener('DOMContentLoaded', () => {
+        updateAuthUI();
+
+        const pLoader = document.getElementById('page-loader');
+        pLoader.style.width = '40%';
+        setTimeout(() => { pLoader.style.width = '75%'; }, 150);
+        
+        setTimeout(() => {
+            const btns = document.querySelectorAll('.nav-whatsapp-item');
+            if(btns.length > 0) updateNavIndicator(btns[0]);
+        }, 100);
+
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        
+        // Manejo robusto del historial para no sacar al usuario de la web al retroceder
+        if (!window.history.state || !window.history.state.view) {
+            window.history.replaceState({ view: 'exit_trap' }, '');
+            if (id) {
+                // Aseguramos de tener siempre un estado 'home' en la base del historial
+                window.history.pushState({ view: 'home' }, '', window.location.pathname);
+                window.history.pushState({ view: 'download', id: id }, '', '?id=' + id);
+                startLoading(id, true);
+            } else {
+                window.history.pushState({ view: 'home' }, '', window.location.pathname);
+            }
+        } else {
+            // Si ya hay un estado en historial activo (por ejemplo, recarga)
+            if (id) {
+                startLoading(id, true);
+            }
+        }
+
+        // Script de arrastre de la barra base
+        const navContainer = document.querySelector('.bottom-nav-whatsapp');
+        const indicator = document.getElementById('nav-indicator');
+        let isDraggingIndicator = false;
+        let startX = 0;
+
+        if(navContainer && indicator) {
+            navContainer.addEventListener('touchstart', (e) => {
+                isDraggingIndicator = false;
+                startX = e.touches[0].clientX;
+            }, { passive: true });
+
+            navContainer.addEventListener('touchmove', (e) => {
+                const touchX = e.touches[0].clientX;
+                if (Math.abs(touchX - startX) > 8) { 
+                    isDraggingIndicator = true;
+                    indicator.style.transition = 'none';
+                    const navRect = navContainer.getBoundingClientRect();
+                    let newLeft = touchX - navRect.left - (indicator.offsetWidth / 2);
+                    if (newLeft < 0) newLeft = 0;
+                    if (newLeft > navRect.width - indicator.offsetWidth) newLeft = navRect.width - indicator.offsetWidth;
+                    indicator.style.left = `${newLeft}px`;
+                }
+            }, { passive: true });
+
+            navContainer.addEventListener('touchend', () => {
+                indicator.style.transition = 'left 0.4s cubic-bezier(0.25, 1, 0.5, 1), width 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                if (isDraggingIndicator) {
+                    const navBtns = Array.from(document.querySelectorAll('.nav-whatsapp-item'));
+                    const navRect = navContainer.getBoundingClientRect();
+                    const indicatorCenter = parseFloat(indicator.style.left) + (indicator.offsetWidth / 2);
+                    let closestBtn = navBtns[0];
+                    let minDistance = Infinity;
+                    
+                    navBtns.forEach(btn => {
+                        const btnRect = btn.getBoundingClientRect();
+                        const btnCenter = btnRect.left - navRect.left + (btnRect.width / 2);
+                        const distance = Math.abs(indicatorCenter - btnCenter);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestBtn = btn;
+                        }
+                    });
+                    if (closestBtn) closestBtn.click(); 
+                }
+            });
+        }
+    });
+
+    window.addEventListener('load', () => {
+        const pLoader = document.getElementById('page-loader');
+        pLoader.style.width = '100%';
+        setTimeout(() => {
+            pLoader.style.opacity = '0';
+            setTimeout(() => { pLoader.style.display = 'none'; }, 300);
+        }, 300);
+    });
+
+    window.addEventListener('resize', () => {
+        const activeBtn = document.querySelector('.nav-whatsapp-item[data-active="true"]') || document.querySelectorAll('.nav-whatsapp-item')[0];
+        updateNavIndicator(activeBtn);
+    });
+
+    // Control del botón hacia atrás nativo y función "Doble toque para salir"
+    let lastBackPress = 0;
+    window.addEventListener('popstate', (event) => {
+        closeDrawer();
+        closeInfo();
+        closeLogin();
+        closeAddApp();
+        
+        if (window.loadingInterval) clearInterval(window.loadingInterval);
+
+        if (!event.state || event.state.view === 'exit_trap') {
+            const now = Date.now();
+            if (now - lastBackPress < 2000) {
+                window.history.go(-1); 
+            } else {
+                lastBackPress = now;
+                showToast('Presiona de nuevo para salir');
+                window.history.pushState({ view: 'home' }, '', window.location.pathname);
+                showMainView();
+                executeResetToHome(false);
+            }
+        } else if (event.state.view === 'download') {
+            startLoading(event.state.id, true);
+        } else if (event.state.view === 'category') {
+            showMainView();
+            executeCategoryFilter(event.state.category, false);
+        } else if (event.state.view === 'search') {
+            showMainView();
+            document.getElementById('search-input').value = event.state.term;
+            executeSearch(event.state.term, false);
+        } else if (event.state.view === 'home') {
+            showMainView();
+            executeResetToHome(false);
+        } else {
+            showMainView();
+            executeResetToHome(false);
+        }
+    });
+
+    function showMainView() {
+        document.getElementById('main-view').style.display = 'block';
+        document.getElementById('download-view').style.display = 'none';
+        
+        const navBar = document.querySelector('.bottom-nav-whatsapp');
+        if (navBar) {
+            navBar.style.display = 'flex';
+        }
+    }
+
+    function updateNavIndicator(btn) {
+        const indicator = document.getElementById('nav-indicator');
+        const nav = document.querySelector('.bottom-nav-whatsapp');
+        if(!indicator || !btn || nav.style.display === 'none') return;
+        
+        document.querySelectorAll('.nav-whatsapp-item').forEach(b => b.removeAttribute('data-active'));
+        btn.setAttribute('data-active', 'true');
+        
+        const navRect = nav.getBoundingClientRect();
+        const btnRect = btn.getBoundingClientRect();
+        
+        indicator.style.width = `${btnRect.width}px`;
+        indicator.style.left = `${btnRect.left - navRect.left}px`;
+    }
+
+    let recentSearches = JSON.parse(localStorage.getItem('fylio_recents')) || [];
+
+    function saveSearch(term) {
+        if(!term) return;
+        recentSearches = recentSearches.filter(t => t.toLowerCase() !== term.toLowerCase());
+        recentSearches.unshift(term);
+        if(recentSearches.length > 5) recentSearches.pop();
+        localStorage.setItem('fylio_recents', JSON.stringify(recentSearches));
+    }
+
+    function renderRecents() {
+        const list = document.getElementById('recent-list');
+        const container = document.getElementById('recent-searches');
+        if(recentSearches.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+        list.innerHTML = recentSearches.map(term => `
+            <div class="recent-item" onmousedown="applyRecentSearch('${term.replace(/'/g, "\\'")}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                ${term}
+            </div>
+        `).join('');
+    }
+
+    function handleSearchFocus() {
+        showRecents();
+        const socialBtns = document.getElementById('social-buttons');
+        if (socialBtns) socialBtns.classList.add('hidden');
+    }
+
+    function handleSearchBlur() {
+        hideRecentsDelayed();
+        setTimeout(() => {
+            const input = document.getElementById('search-input');
+            const socialBtns = document.getElementById('social-buttons');
+            if (input && input.value.trim() === '' && window.history.state && window.history.state.view === 'home') {
+                if (socialBtns) socialBtns.classList.remove('hidden');
+            }
+        }, 150);
+    }
+
+    function showRecents() {
+        renderRecents();
+        if(recentSearches.length > 0) {
+            document.getElementById('recent-searches').style.display = 'block';
+        }
+    }
+
+    function hideRecentsDelayed() {
+        setTimeout(() => {
+            document.getElementById('recent-searches').style.display = 'none';
+        }, 150);
+    }
+
+    function clearRecents() {
+        recentSearches = [];
+        localStorage.removeItem('fylio_recents');
+        document.getElementById('recent-searches').style.display = 'none';
+    }
+
+    function applyRecentSearch(term) {
+        document.getElementById('search-input').value = term;
+        performSearch();
+    }
+
+    const APPS_DATA = [
+        {
+            id: 'whatsapp_vctm',
+            title: 'WhatsApp Plus VCTM: yesiimods',
+            keys: ['whatsapp', 'wasap', 'plus', 'whassap', 'wassap'],
+            link: 'https://www.mediafire.com/file/g3ips2objskmg7t/[COM.UNI]Plus_YesiiMods_V5.42F.apk/file',
+            isImage: true,
+            bgValue: 'linear-gradient(135deg, #FF8512, #FF3E12)',
+            bannerText: 'WhatsApp Plus',
+            etiqueta: 'actualizado', 
+            date: '2026-08-13',
+            fileName: '[COM.UNI]Plus_YesiiMods_V5.36.apk',
+            version: 'V5.36',
+            size: '198 MB',
+            category: 'app'
+        },
+        {
+            id: 'capcut pro',
+            title: 'CapCut: Pro',
+            keys: ['capcut', 'catcup', 'catcut', 'capcup'],
+            link: 'https://www.mediafire.com/file/2en4lvwju4gx8y3/CapCUT+22.0.0+Ultra+Pro+[LifeTIMe].apk/file',
+            isImage: false,
+            bgValue: '#00d2ff',
+            bannerText: 'Capcut premium',
+            etiqueta: 'actualizado', 
+            date: '2026-08-14',
+            fileName: 'CapCut_Premium_v18.1.0.apk',
+            version: 'v18.8.0',
+            size: '407 MB',
+            category: 'herramienta'
+        },
+        {
+            id: 'tiktok mod',
+            title: 'tiktok: mod descarga apk universal y apk plugin',
+            keys: ['tiktok', 'tiktok mod', 'tiktok plus', 'tiptok', 'tiktop', 'tiptop'],
+            link: 'https://apkw.ru/en/download/tik-tok-mod/',
+            isImage: true,
+            bgValue: 'linear-gradient(135deg, #00CBFF, #FF2200)',
+            bannerText: 'tiktok: mod menu',
+            etiqueta: '', 
+            date: '2026-05-10',
+            fileName: 'TikTok_Mod_Universal.apk',
+            version: 'v32.5.4',
+            size: '710.7 MB',
+            category: 'app'
+        }, 
+        {
+            id: 'xupertv',
+            title: 'XuperTV: mod',
+            keys: ['super tv', 'xuper tv', 'xuper', 'súper tv'],
+            link: 'https://www.mediafire.com/file/ewwiflzy9au1fo4/XuperHydra.apk/file',
+            isImage: false,
+            bgValue: '#006EFF',
+            bannerText: 'Xuper tv',
+            etiqueta: 'nuevo',
+            date: '2026-06-24',
+            fileName: 'XuperHydra.apk',
+            version: 'v1.0.2',
+            size: '34.27 MB',
+            category: 'app'
+        },
+        {
+            id: 'minecraft',
+            title: 'Minecraft: 1.26.32',
+            keys: ['minecraft', 'maincraf', 'maincra'],
+            link: 'https://www.mediafire.com/file/haesikz36ukems7/Minecraft.apk/file',
+            isImage: false,
+            bgValue: '#21CE21',
+            bannerText: 'Minecraft',
+            etiqueta: 'actualizado',
+            date: '2026-06-22',
+            fileName: 'Minecraft-1-26-32.apk',
+            version: '1.26.32',
+            size: '769.2 MB',
+            category: 'juego'
+        },
+        {
+            id: 'null royale',
+            title: 'Clash Royale Unlimited money',
+            keys: ['null royale', 'clash royale', 'clash royale gemas infinitas'],
+            link: 'https://www.mediafire.com/file/yf66hkokz9umax7/nr_15.535.13_release_ff1c6c29.apk/file',
+            isImage: true,
+            bgValue: 'linear-gradient(135deg, #009DFF, #00008C)',
+            bannerText: 'clash royale: mod',
+            etiqueta: 'actualizado',
+            date: '2026-06-20',
+            fileName: 'nr_15.535.13_release.apk',
+            version: 'v15.535.13',
+            size: '757.69 MB',
+            category: 'juego'
+        }, 
+        {
+            id: 'time cut',
+            title: 'time cut: mod',
+            keys: ['time', 'cut', 'time cut'],
+            link: 'https://www.mediafire.com/file/ewwiflzy9au1fo4/XuperHydra.apk/file',
+            isImage: false,
+            bgValue: '#BCBCBC',
+            bannerText: 'time cut',
+            etiqueta: 'nuevo',
+            date: '2026-06-30',
+            fileName: 'time cut.apk',
+            version: 'v2.5.2',
+            size: '59.96 MB',
+            category: 'herramienta'
+        },
+        {
+            id: 'HBO max',
+            title: 'HBOMax: pro',
+            keys: ['hbo', 'hbo max', 'max'],
+            link: 'https://www.mediafire.com/file/22fxato4dp3q7wd/HBOMax++Mod+By+iking+15+06+2026+re-upload.apk/file',
+            isImage: true,
+            bgValue: 'linear-gradient(135deg, #000000, #4F4F4F)',
+            bannerText: 'HBO Max',
+            etiqueta: 'nuevo',
+            date: '2026-07-01',
+            fileName: 'Hbo max pro.apk',
+            version: '',
+            size: '76.53 MB',
+            category: 'app'
+        }, 
+        {
+            id: 'shadow-fight-2-mod',
+            title: 'shadow fight 2 mod',
+            keys: ['shadow fight 2', 'shadow', 'ninja'],
+            link: 'https://www.mediafire.com/file/cq7bzqjjnvwa1mb/shadow-fight-2-mod_2.45.0-an1.com.apk/file',
+            isImage: true,
+            bgValue: 'linear-gradient(135deg, #41992B, #6D6D6D)',
+            bannerText: 'shadow fight 2',
+            etiqueta: 'nuevo',
+            date: '2026-07-02',
+            fileName: 'shadow-fight-2-mod',
+            version: '',
+            size: '157.01 MB',
+            category: 'juego'
+        }, 
+        {
+            id: 'AZ Screen Recorder',
+            title: 'AZ Screen Recorder',
+            keys: ['grabadora', 'grabadora de pantalla', 'az screen', 'az screen recorder', 'az'],
+            link: 'https://www.mediafire.com/file/7cr0ngjcih3onep/AZ_Screen_Recorder_v6.9.4_%2528Premium%2529.apk/file',
+            isImage: false,
+            bgValue: '#FF6100',
+            bannerText: 'AZ Screen Recorder',
+            etiqueta: 'nuevo',
+            date: '2026-06-22',
+            fileName: 'AZ_Screen_Recorder_v6.9.4',
+            version: '6.9.4',
+            size: '82.78 MB',
+            category: 'herramienta'
+        },
+        {
+            id: 'wink',
+            title: 'wink premium',
+            keys: ['wink', 'editor'],
+            link: 'https://www.mediafire.com/file/foydamxqdbqk5a8/Wink+v2.22.5+(Premium).apk/file',
+            isImage: false,
+            bgValue: '#4E4E4E',
+            bannerText: 'wink',
+            etiqueta: 'nuevo',
+            date: '2026-06-22',
+            fileName: 'Wink_v2.22.5.apk',
+            version: 'v2.22.5',
+            size: '112.5 MB',
+            category: 'herramienta'
+        }
+    ];
+
+    function getAllApps() {
+        const custom = JSON.parse(localStorage.getItem('fylio_custom_apps')) || [];
+        return [...APPS_DATA, ...custom];
+    }
+
+    // Lógica para Menú Lateral y Modales
+    function toggleDrawer() {
+        const drawer = document.getElementById('side-drawer');
+        const overlay = document.getElementById('drawer-overlay');
+        if (drawer.style.left === '0px') {
+            closeDrawer();
+        } else {
+            overlay.style.display = 'block';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                drawer.style.left = '0px';
+            }, 10);
+        }
+    }
+
+    function closeDrawer() {
+        const drawer = document.getElementById('side-drawer');
+        const overlay = document.getElementById('drawer-overlay');
+        drawer.style.left = '-280px';
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300);
+    }
+
+    function mostrarInformacion() {
+        closeDrawer();
+        document.getElementById('info-modal').style.display = 'flex';
+    }
+
+    function closeInfo() {
+        document.getElementById('info-modal').style.display = 'none';
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast-notification');
+        toast.innerText = msg;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2000);
+    }
+
+    // Control de Sesión e Interfaz
+    function updateAuthUI() {
+        const isLoggedIn = sessionStorage.getItem('fylio_logged_in') === 'true';
+        const authContainer = document.getElementById('auth-btn-container');
+        const addAppContainer = document.getElementById('add-app-btn-container');
+
+        if (isLoggedIn) {
+            authContainer.innerHTML = `
+                <button class="side-btn" onclick="logout()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Cerrar sesión
+                </button>
+            `;
+            addAppContainer.style.display = 'block';
+        } else {
+            authContainer.innerHTML = `
+                <button class="side-btn" onclick="openLogin()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                        <polyline points="10 17 15 12 10 7"></polyline>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                    Iniciar sesión
+                </button>
+            `;
+            addAppContainer.style.display = 'none';
+        }
+    }
+
+    function openLogin() {
+        closeDrawer();
+        document.getElementById('login-modal').style.display = 'flex';
+    }
+
+    function closeLogin() {
+        document.getElementById('login-modal').style.display = 'none';
+    }
+
+    function handleLogin(e) {
+        e.preventDefault();
+        sessionStorage.setItem('fylio_logged_in', 'true');
+        updateAuthUI();
+        closeLogin();
+        showToast('Sesión iniciada con éxito');
+    }
+
+    function logout() {
+        sessionStorage.removeItem('fylio_logged_in');
+        updateAuthUI();
+        closeDrawer();
+        showToast('Sesión cerrada');
+    }
+
+    // Modal para Añadir Aplicación
+    function openAddApp() {
+        closeDrawer();
+        document.getElementById('add-app-modal').style.display = 'flex';
+    }
+
+    function closeAddApp() {
+        document.getElementById('add-app-modal').style.display = 'none';
+    }
+
+    function toggleColorInputs() {
+        const colorType = document.querySelector('input[name="colorType"]:checked').value;
+        const color2Container = document.getElementById('color2-container');
+        const color2Input = document.getElementById('app-color2');
+        if (colorType === 'gradient') {
+            color2Container.style.display = 'block';
+            color2Input.required = true;
+        } else {
+            color2Container.style.display = 'none';
+            color2Input.required = false;
+        }
+    }
+
+    function handleAddApp(e) {
+        e.preventDefault();
+        const name = document.getElementById('app-name').value.trim();
+        const version = document.getElementById('app-version').value.trim();
+        const filename = document.getElementById('app-filename').value.trim();
+        const size = document.getElementById('app-size').value.trim();
+        const link = document.getElementById('app-link').value.trim();
+        const category = document.getElementById('app-category').value;
+        
+        const colorType = document.querySelector('input[name="colorType"]:checked').value;
+        const color1 = document.getElementById('app-color1').value.trim();
+        const color2 = document.getElementById('app-color2').value.trim();
+
+        let bgValue = color1;
+        let isImage = false;
+
+        if (colorType === 'gradient') {
+            bgValue = `linear-gradient(135deg, ${color1}, ${color2})`;
+            isImage = true;
+        }
+
+        const newApp = {
+            id: 'app_' + Date.now(),
+            title: name,
+            keys: [name.toLowerCase(), filename.toLowerCase()],
+            link: link,
+            isImage: isImage,
+            bgValue: bgValue,
+            bannerText: name,
+            etiqueta: 'nuevo',
+            date: new Date().toISOString().split('T')[0],
+            fileName: filename,
+            version: version,
+            size: size,
+            category: category
+        };
+
+        const customApps = JSON.parse(localStorage.getItem('fylio_custom_apps')) || [];
+        customApps.push(newApp);
+        localStorage.setItem('fylio_custom_apps', JSON.stringify(customApps));
+
+        closeAddApp();
+        showToast('Aplicación añadida con éxito');
+        
+        // Resetear formulario
+        e.target.reset();
+        toggleColorInputs();
+
+        // Refrescar vista actual
+        if (window.history.state && window.history.state.view === 'category') {
+            executeCategoryFilter(window.history.state.category, false);
+        } else if (window.history.state && window.history.state.view === 'search') {
+            executeSearch(window.history.state.term, false);
+        } else {
+            executeResetToHome(false);
+        }
+    }
+
+    // Funciones de Búsqueda y Navegación
+    function handleSearchKey(e) {
+        if (e.key === 'Enter') performSearch();
+    }
+
+    function performSearch() {
+        const input = document.getElementById('search-input');
+        const term = input.value.trim();
+        if(!term) return;
+        saveSearch(term);
+        window.history.pushState({ view: 'search', term: term }, '', '?search=' + encodeURIComponent(term));
+        executeSearch(term, false);
+    }
+
+    function executeSearch(term, updateHist = true) {
+        showMainView();
+        document.getElementById('welcome-text').style.display = 'none';
+        const resultsContainer = document.getElementById('search-results');
+        resultsContainer.style.display = 'block';
+
+        const allApps = getAllApps();
+        const filtered = allApps.filter(app => {
+            const titleMatch = app.title.toLowerCase().includes(term.toLowerCase());
+            const keyMatch = app.keys && app.keys.some(k => k.toLowerCase().includes(term.toLowerCase()));
+            return titleMatch || keyMatch;
+        });
+
+        renderAppList(filtered, resultsContainer);
+    }
+
+    function navigateToSection(type, val) {
+        if (type === 'home') {
+            window.history.pushState({ view: 'home' }, '', window.location.pathname);
+            executeResetToHome(true);
+        } else if (type === 'category') {
+            window.history.pushState({ view: 'category', category: val }, '', '?cat=' + val);
+            executeCategoryFilter(val, true);
+        }
+    }
+
+    function executeResetToHome(updateIndicator = true) {
+        showMainView();
+        document.getElementById('welcome-text').style.display = 'block';
+        document.getElementById('search-results').style.display = 'none';
+        document.getElementById('search-input').value = '';
+        const socialBtns = document.getElementById('social-buttons');
+        if (socialBtns) socialBtns.classList.remove('hidden');
+
+        if(updateIndicator) {
+            const btns = document.querySelectorAll('.nav-whatsapp-item');
+            if(btns.length > 0) updateNavIndicator(btns[0]);
+        }
+    }
+
+    function executeCategoryFilter(cat, updateIndicator = true) {
+        showMainView();
+        document.getElementById('welcome-text').style.display = 'none';
+        const resultsContainer = document.getElementById('search-results');
+        resultsContainer.style.display = 'block';
+
+        const allApps = getAllApps();
+        const filtered = allApps.filter(app => app.category === cat);
+        renderAppList(filtered, resultsContainer);
+
+        if(updateIndicator) {
+            const catMap = { 'app': 1, 'juego': 2, 'archivo': 3, 'herramienta': 4 };
+            const btns = document.querySelectorAll('.nav-whatsapp-item');
+            if (catMap[cat] !== undefined && btns[catMap[cat]]) {
+                updateNavIndicator(btns[catMap[cat]]);
+            }
+        }
+    }
+
+    function renderAppList(apps, container) {
+        if(apps.length === 0) {
+            container.innerHTML = '<p style="opacity:0.7; margin-top:20px;">No se encontraron resultados</p>';
+            return;
+        }
+
+        container.innerHTML = apps.map(app => {
+            const bgStyle = app.isImage 
+                ? `background-image: ${app.bgValue};` 
+                : `background-color: ${app.bgValue};`;
+
+            const badgeHtml = app.etiqueta ? `<span class="card-badge badge-${app.etiqueta}">${app.etiqueta}</span>` : '';
+
+            return `
+                <div class="result-item" onclick="openDownloadView('${app.id}')">
+                    ${badgeHtml}
+                    <div class="banner-dynamic" style="${bgStyle}">
+                        ${app.bannerText}
+                    </div>
+                    <div class="result-title">${app.title}</div>
+                    <div class="file-info-tags">
+                        ${app.version ? `<span class="info-tag">${app.version}</span>` : ''}
+                        ${app.size ? `<span class="info-tag">${app.size}</span>` : ''}
+                    </div>
+                    <div class="card-actions">
+                        <button class="share-card-btn" onclick="shareApp(event, '${app.id}', '${app.title.replace(/'/g, "\\'")}')">
+                            <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                            Compartir
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function shareApp(event, id, title) {
+        event.stopPropagation();
+        const shareUrl = `${window.location.origin}${window.location.pathname}?id=${id}`;
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                text: `Descarga ${title} en Fylio:`,
+                url: shareUrl
+            }).catch(() => {});
+        } else {
+            navigator.clipboard.writeText(shareUrl);
+            showToast('Enlace copiado al portapapeles');
+        }
+    }
+
+    function openDownloadView(id) {
+        window.history.pushState({ view: 'download', id: id }, '', '?id=' + id);
+        startLoading(id, true);
+    }
+
+    function startLoading(id, isNew = true) {
+        const allApps = getAllApps();
+        const app = allApps.find(a => a.id === id);
+        if(!app) return;
+
+        document.getElementById('main-view').style.display = 'none';
+        const dlView = document.getElementById('download-view');
+        dlView.style.display = 'block';
+
+        const navBar = document.querySelector('.bottom-nav-whatsapp');
+        if (navBar) navBar.style.display = 'none';
+
+        const dlImg = document.getElementById('dl-image');
+        dlImg.style.backgroundImage = app.isImage ? app.bgValue : 'none';
+        dlImg.style.backgroundColor = !app.isImage ? app.bgValue : 'transparent';
+        dlImg.innerText = app.bannerText;
+
+        document.getElementById('dl-title').innerText = app.title;
+
+        const dlBtn = document.getElementById('download-btn');
+        const loader = document.getElementById('circular-loader');
+        const countdownText = document.getElementById('countdown-text');
+        const circleProgress = document.getElementById('circle-progress');
+
+        dlBtn.style.display = 'none';
+        loader.style.display = 'block';
+        loader.classList.remove('complete');
+
+        let timeLeft = 5;
+        countdownText.innerText = timeLeft;
+        circleProgress.style.strokeDashoffset = '276.46';
+
+        if(window.loadingInterval) clearInterval(window.loadingInterval);
+
+        window.loadingInterval = setInterval(() => {
+            timeLeft--;
+            if(timeLeft >= 0) {
+                countdownText.innerText = timeLeft;
+                const offset = 276.46 - ((5 - timeLeft) / 5) * 276.46;
+                circleProgress.style.strokeDashoffset = offset;
+            }
+
+            if (timeLeft <= 0) {
+                clearInterval(window.loadingInterval);
+                loader.classList.add('complete');
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    dlBtn.style.display = 'flex';
+                    dlBtn.onclick = () => {
+                        window.open(app.link, '_blank');
+                    };
+                }, 500);
+            }
+        }, 1000);
+
+        // Cargar Recomendaciones
+        const recContainer = document.getElementById('recommendations-container');
+        const recList = document.getElementById('recommendations-list');
+        const recommendations = allApps.filter(a => a.id !== id).slice(0, 3);
+
+        if(recommendations.length > 0) {
+            recContainer.style.display = 'block';
+            renderAppList(recommendations, recList);
+        } else {
+            recContainer.style.display = 'none';
+        }
+    }
+</script>
+</body>
+</html>
